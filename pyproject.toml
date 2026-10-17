@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "clawmetry-jumper"
+version = "0.1.0"
+description = "Open-source task boundaries and local evidence for Jumper desk companion simulations"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+dependencies = ["duckdb>=1.1", "flask>=3.0"]
+
+[project.optional-dependencies]
+sim = ["mujoco==3.11.0", "numpy>=2.0", "onnxruntime>=1.17", "pillow>=10"]
+dev = ["pytest>=8"]
+
+[project.entry-points."clawmetry.extensions"]
+jumper = "clawmetry_jumper.plugin:register_all"
+
+[project.scripts]
+clawmetry-jumper = "clawmetry_jumper.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]

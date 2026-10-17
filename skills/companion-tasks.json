@@ -1,0 +1,9 @@
+{
+  "schema": "clawmetry-jumper-tasks/1",
+  "workspace": "approved_tabletop",
+  "tasks": [
+    {"id":"stretch","purpose":"Offer a break after a configured work interval","actions":["wave"],"timer_source":"scripted_demo","status":"greeting_demonstrated"},
+    {"id":"sip","purpose":"Offer a drink reminder","actions":["bow"],"objects":["glass"],"status":"greeting_demonstrated","transport":"planned"},
+    {"id":"tidy","purpose":"Put agreed pen and paper away after work","actions":["carry"],"objects":["pen","paper"],"status":"planned_not_executable"}
+  ]
+}

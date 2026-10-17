@@ -1,0 +1,15 @@
+ClawMetry Jumper
+Copyright 2026 Vivek Chand and contributors.
+
+This adapter is Apache-2.0. It is an independent project, not an official
+KingKong Robotics or BE UNLIMITED product or endorsement.
+
+The robot model, exported policies and native/web controller used at runtime
+come from KingKongRobotics/jumper, copyright 2026 KingKong Robotics, under
+Apache-2.0 with the exceptions in the upstream NOTICE. The robot and policy
+binaries are fetched separately by preparation scripts. Retain their LICENSE
+and NOTICE when redistributing those materials.
+
+The desk scene is authored for this project using KingKongRobotics/jumper-design.
+Screenshots depict the upstream robot and our generated scene in MuJoCo.
+No ClawMetry Pro implementation is included in this repository.

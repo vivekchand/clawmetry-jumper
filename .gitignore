@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.egg-info/
+*.duckdb*
+artifacts/
+research/
+.DS_Store
+.env
+.env.*
+.sw-factory/
