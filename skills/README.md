@@ -3,7 +3,9 @@
 A skill is a purposeful action within a user-approved task. Its policy or motion
 implementation is separate from the permissions surrounding it.
 
-Current simulator requests supported by `TaskGate`:
+The demo imports `Task` and `TaskGate` from `clawmetry.physical_ai`. It declares only `supported_actions={"wave", "bow"}` for this scene. The generic built-in gate grants no supported actions by default.
+
+Current simulator skill qualification:
 
 | Skill | Native binding | Status |
 |---|---|---|
@@ -11,9 +13,9 @@ Current simulator requests supported by `TaskGate`:
 | Bow | key_2 / gesture_bow | Measured on the tabletop |
 | Offer paw | key_3 / gesture_paw | Available upstream; not yet desk-qualified here |
 | Salute | key_4 / gesture_salute | Available upstream; not yet desk-qualified here |
-| Walk to an object | Requires path and boundary controller | Planned, refused by adapter |
-| Bring the glass | Requires contact-only pick, carry, place | Planned, refused by adapter |
-| Tidy pen or paper | Requires authorized object selection and grasp | Planned, refused by adapter |
+| Walk to an object | Requires path and boundary controller | Planned, refused by the built-in gate |
+| Bring the glass | Requires contact-only pick, carry, place | Planned, refused by the built-in gate |
+| Tidy pen or paper | Requires authorized object selection and grasp | Planned, refused by the built-in gate |
 
 Sip and stretch reminders are app interactions. Demonstrating a wave after a
 scripted timer does not establish detection of dehydration, posture or human

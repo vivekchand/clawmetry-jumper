@@ -9,3 +9,4 @@ research/
 .env
 .env.*
 .sw-factory/
+workspace/

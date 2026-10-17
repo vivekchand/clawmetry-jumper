@@ -23,8 +23,12 @@ upstream training/deployment/toolchain verification gates have passed.
   --enable-simulator-controls --steps 7000 --seed 42
 ```
 
-Install this adapter into that environment with `pip install -e . --no-deps`,
-and install its evidence dependency `duckdb` if absent. The caller must provide
+Jumper observation and governance ship in the normal `clawmetry` package. Install
+this optional demo into the upstream playback environment with `pip install -e .`.
+Before the corresponding main-package release, first install the reviewed
+ClawMetry source checkout with `pip install -e /path/to/clawmetry`. The demo
+depends on ordinary `clawmetry`, without inventing an unpublished version.
+The caller must provide
 the actual `.map` package, not the Design source JSON. The official importer
 places the map's spawn at the origin, turns its heading onto +X and keeps the
 task's original robot. Bounds passed with `--table-bounds X_MIN X_MAX Y_MIN Y_MAX`
@@ -49,17 +53,38 @@ the native controller. Optional `--wave-at`, `--bow-at`, `--jump-at` support sho
 smoke tests. An input-delivery receipt is separate from a later native transition
 and measured result.
 
+The wrapper imports `Task`, `Request`, `TaskGate`, `DeskMonitor` and `JumperObserver`
+from `clawmetry.physical_ai`. It declares the scene's qualified wave/bow actions
+explicitly; the generic gate permits no skills by default. There is no external
+extension entry point or separate demo dashboard.
+
 After each real physics step, observations come from the native backend's public
 `env.sim.env_mjdata(0)`. Full enabled robot collision bounds determine signed
-table clearance. `DeskMonitor` checks fresh state, edge proximity, base lift and
-tilt; alerts and notification status are written locally. No webhook or phone
-delivery is configured by this wrapper. Observations persist at 20 Hz; requests,
-decisions and native transitions persist individually. A seated figure in the
+table clearance. Each named robot hinge is read at its own declared
+`model.jnt_qposadr` and `model.jnt_dofadr` addresses, publishing position in radians
+and velocity in radians per second. The floating base and scene-prop joints are
+excluded. Scalar slide measurements, if present, remain separately labelled in
+metres in the demo capture; they are never mislabeled as angular measurements.
+The current Jumper model has angular joints. No torque is inferred or published
+by this official wrapper. Every real frame reaches the built-in observer, which samples
+the shared journal at 10 Hz and checks fresh state, edge proximity, lift and tilt.
+`observer.decide(...)` emits typed requests, decisions and denial incidents;
+native input delivery and actual mode changes emit separate controller receipts.
+The normal ClawMetry daemon ingests the journal into its own DuckDB and main
+Physical AI routes. Its existing incident channels own production notification
+dispatch and actual delivery receipts. `--journal-dir` overrides the default
+shared location only when isolated verification is desired.
+
+Optional film sidecars additionally retain 20 Hz observations, decisions, native
+transitions and local `not_configured` notification placeholders for the edit.
+These placeholders are never emitted as shared delivery evidence. A seated figure in the
 scene is visual/physical scene content, not proof of human detection or intent
 recognition.
 
-Outputs are the official MP4, its `.replay-info.json`, `.clawmetry.json` measured
-summary and local DuckDB evidence. A failed or terminated episode is retained
+Outputs are the built-in shared journal, the official MP4, its `.replay-info.json`,
+`.clawmetry.json` measured summary and optional demo-only DuckDB capture.
+The measured summary includes the shared observer run ID and path.
+A failed or terminated episode is retained
 as such. This wrapper does not promise physical containment, reset hidden falls,
 transport a cup, or claim a hardware stop. Initial state randomization and all
 official task physics remain in force, with a fixed seed for repeatability.

@@ -1,1 +1,1 @@
-"""Open-source Jumper simulator adapter. No hardware control or Pro code."""
+"""Mizu companion simulator demo, using the built-in ClawMetry OSS observer."""

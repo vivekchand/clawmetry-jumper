@@ -1,8 +1,9 @@
 ClawMetry Jumper
 Copyright 2026 Vivek Chand and contributors.
 
-This adapter is Apache-2.0. It is an independent project, not an official
-KingKong Robotics or BE UNLIMITED product or endorsement.
+This Mizu simulator demo is Apache-2.0. The Jumper observer and shared task
+governance ship in the normal ClawMetry OSS package, not an external extension.
+This demo is not an official KingKong Robotics or BE UNLIMITED product or endorsement.
 
 The robot model, exported policies and native/web controller used at runtime
 come from KingKongRobotics/jumper, copyright 2026 KingKong Robotics, under

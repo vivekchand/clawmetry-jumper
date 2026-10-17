@@ -1,40 +1,79 @@
 # Mizu on Jumper, with ClawMetry
 
-A calm desk companion, with a clear task and a record of what it actually did.
+A calm desk companion demo, with a clear task and a record of what it actually did.
+
+**Development preview:** the built-in Jumper observer is pending the ordinary
+ClawMetry release from [core PR 6473](https://github.com/vivekchand/clawmetry/pull/6473).
+Until that release is published, use the exact development install below. The
+normal one-package command describes the intended released installation.
 
 ![Native Jumper simulation with our desk scene and seated person](docs/images/desk-scene.png)
 
-Mizu began as a healthy desktop prototype at the La Machine robotics hackathon:
+**Jumper observation, task governance and Physical AI history belong to ordinary
+ClawMetry OSS.** This repository contains the Mizu example: simulator host,
+verified source/asset provenance, authored desk scene, companion skills, browser
+playground and review film. It ships no second ClawMetry extension or dashboard.
+
+```sh
+pip install clawmetry
+clawmetry
+```
+
+That is the shared ClawMetry installation for Jumper and supported digital-agent
+runtimes. Robot simulation/training libraries are needed only by a robot host or
+this optional demo; the dashboard does not install or run them.
+
+Mizu began as the user-provided LeRobot healthy desktop prototype:
 a reminder to stretch, water brought within reach, and a little tidying after
-work. This open-source experiment brings that idea to KingKong Robotics' Jumper.
-ClawMetry adds task permissions, full-body tabletop measurements, local activity
-history and alerts. It is a **local simulation prototype**. It does not establish
-hardware safety or autonomous glass delivery.
+work. This experiment brings the idea to KingKong Robotics' Jumper. It is a
+**simulation demo**. It does not establish hardware safety or autonomous glass delivery.
+
+## Use the built-in observer
+
+An application producing Jumper measurements uses the API in the main package:
+
+```python
+from clawmetry.physical_ai import DeskMonitor, JumperObserver
+
+with JumperObserver(
+    "desk-companion", environment="simulation",
+    monitor=DeskMonitor(),
+) as observer:
+    # Call from the real robot/simulator telemetry callback.
+    observer.observe(measured_frame, now_s=measured_frame["time_s"])
+```
+
+ClawMetry discovers the shared typed journal, ingests it through its normal
+single-writer daemon, and exposes persisted Physical AI history in the main
+dashboard. Requests, decisions, native-controller receipts and incidents remain
+separate facts. The observer does not actuate a robot. An application must
+explicitly enable a qualified simulator skill before forwarding any request.
+Hardware command delivery is unavailable through this demo.
 
 ## What works in the recorded run
 
-- The official Jumper `play --app` simulator and MP4 recorder run our finite desk
-  scene, with a seated static human proxy and a calm sage robot color treatment.
+- The official Jumper `play --app` simulator and MP4 recorder run a finite desk
+  scene with a seated static human proxy and a calm sage robot color treatment.
 - Real native-controller wave and bow complete and return to the standing policy.
 - An unrelated jump request is denied before controller delivery.
-- The full collision footprint remains within the table in the measured episode.
-- Requests, decisions, native transitions and observations persist in local DuckDB.
-- A read-only ClawMetry extension shows recorded history at `/jumper`.
-- Monitors detect measured edge approach/crossing, unexpected lift, excessive tilt
-  and unavailable observations. Optional HTTPS webhooks record delivery receipts.
+- The conservative full collision footprint remains inside the table in this episode.
+- Built-in ClawMetry APIs record observations, permissions and controller receipts
+  to the shared journal. Optional demo DuckDB sidecars support film reproduction.
+- The built-in monitor identifies measured edge approach/crossing, base lift,
+  excessive tilt and unavailable observations. Actual production notifications use
+  ClawMetry's shared incident channels and delivery receipts.
 
-On the recorded seed-42 run: **7,000 control steps, no resets, 0.310 m minimum
-conservative tabletop clearance**. This is one measured episode, not a physical
+The original seed-42 run measured **7,000 control steps, no resets and 0.310 m
+minimum conservative tabletop clearance**. This is one episode, not a physical
 containment guarantee. [Run details](docs/official-replay.md).
 
-Phone delivery is not configured by default. An accepted webhook is not proof
-that a phone displayed an alert. Missing observations produce `unknown`, not a
-claim that the robot stopped. A rejected action is a task-scope test, not proof
-of protection from every attack or command path.
+Phone delivery is not configured in the film. A local capture receipt is not a
+delivered phone alert. Missing observations produce unknown outcomes. Rejecting
+one input does not prove protection from every command path.
 
-## Run locally
+## Reproduce the optional Mizu demo
 
-Python 3.10 to 3.13 is required for the pinned simulator. Use an isolated environment.
+Python 3.10 to 3.13 is required by the pinned simulator. Use an isolated environment.
 
 ```sh
 git clone https://github.com/vivekchand/clawmetry-jumper.git
@@ -42,57 +81,49 @@ cd clawmetry-jumper
 python3.12 -m venv .venv
 .venv/bin/python -m pip install -e '.[sim,dev]'
 git clone https://github.com/KingKongRobotics/jumper.git ../jumper
-cd ../jumper
-git checkout 78966f45de6f2b6de3f7cea017f32a39f8b993e6
-cd ../clawmetry-jumper
+git -C ../jumper checkout 78966f45de6f2b6de3f7cea017f32a39f8b993e6
 .venv/bin/clawmetry-jumper record --upstream ../jumper --output artifacts/my-first-run
+.venv/bin/clawmetry
 ```
 
-The default observes without sending skill requests. To explicitly enable
-simulator controls, add `--enable-simulator-controls`. Every recording needs a
-new output folder so previous history is preserved. This lightweight runner is
-separate from the official training environment. It uses the shipped native
-controller, ONNX policies and actual MuJoCo physics.
+The runner observes by default. Add `--enable-simulator-controls` to request the
+qualified wave and bow through the built-in task gate. Use a new output folder
+for each recording. The normal observer journal directory makes the run visible
+to the standard ClawMetry collector; `--journal-dir` is an explicit override for
+isolated tests. There is no separate `serve` command or external extension install.
 
-To record **through the official simulator**, including the authored desk and
-seated person, follow [scene preparation](docs/scene-build.md) then
-[official replay](docs/official-replay.md). Neither path uses generated video as
-physics evidence. The full upstream training/device-build setup is not claimed
-ready merely because playback works.
+During development before the corresponding ClawMetry release, install the
+exact main-package candidate into the demo environment first:
 
 ```sh
-.venv/bin/clawmetry-jumper serve --db artifacts/my-first-run/evidence.duckdb
-# Open http://127.0.0.1:8946/jumper
+.venv/bin/python -m pip install "clawmetry @ git+https://github.com/vivekchand/clawmetry.git@070aa27f6b42294f3a31bccf88b08dad0ac0a86d"
+.venv/bin/python -m pip install -e '.[sim,dev]'
 .venv/bin/python -m pytest -q
 ```
 
-Installing this package beside ClawMetry exposes its public extension entry point.
-Use `JUMPER_EVIDENCE_STORE` for a shared simulator/server store or configure
-`JUMPER_EVIDENCE_DB` for a completed database. An active DuckDB writer must serve
-its readers through the same process. Nothing is sent to cloud by this adapter.
+This is a source-development path, not a dependency on an invented unpublished
+version. The distribution dependency remains ordinary `clawmetry`.
 
-## Add companion skills
+For the official simulator, including the desk and seated person, follow
+[scene preparation](docs/scene-build.md) and [official replay](docs/official-replay.md).
+Neither playback path claims the full upstream training/device toolchain is ready.
 
-See [skills](skills/README.md) for task definitions, the execution boundary and
-validation requirements. The current executable skills are native greeting
-policies. Traversing the table, picking up an empty vessel, transporting water
-and putting a pen away require validated motion/manipulation skills. The
-[task roadmap](docs/task-roadmap.md) documents the actual upstream grasp
-experiments and their present limitations. No cup is welded to a claw to make
-an apparent success.
+## Companion skills and story
 
-The intended workspace is the entire approved tabletop, with purposeful travel
-for a task and return to a resting place. Whole-body clearance and a validated
-path matter; a destination check alone does not establish safe travel.
+[Skills](skills/README.md) define purposeful tasks and qualification requirements.
+The demo qualifies wave and bow. Table travel, picking up a vessel, transporting
+water and tidying need separately validated motion/manipulation skills. The
+[roadmap](docs/task-roadmap.md) records the actual upstream grasp experiments.
+No cup is welded to a claw to manufacture a success.
 
-## Story and credits
+[Storyboard](docs/storyboard.md) ·
+[Original Mizu post](https://www.linkedin.com/feed/update/urn:li:activity:7513599170314928130/) ·
+[ClawMetry OSS](https://github.com/vivekchand/clawmetry) ·
+[Physical AI](https://clawmetry.com/physical-ai)
 
-[Storyboard](docs/storyboard.md) · [Original Mizu post](https://www.linkedin.com/feed/update/urn:li:activity:7513599170314928130/)
-· [ClawMetry Physical AI](https://clawmetry.com/physical-ai)
-
-Jumper model, policy and controller: [KingKong Robotics](https://github.com/KingKongRobotics/jumper).
+Jumper model, policies and controller: [KingKong Robotics](https://github.com/KingKongRobotics/jumper).
 Scene tools: [Jumper Design](https://github.com/KingKongRobotics/jumper-design).
 Simulation: [MuJoCo](https://github.com/google-deepmind/mujoco).
 
-Apache-2.0 for this adapter. See [LICENSE](LICENSE) and [NOTICE](NOTICE).
+Apache-2.0 for this demo. See [LICENSE](LICENSE) and [NOTICE](NOTICE).
 Third-party runtime and asset licenses remain their own.

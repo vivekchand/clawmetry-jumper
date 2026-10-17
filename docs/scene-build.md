@@ -37,7 +37,7 @@ The open desk center provides space for the initial reminder gestures. Successfu
 
 ## Reproduce with official tools
 
-Use a separate checkout and environment. These commands were run from the Design repository after installing its documented `.[sim,dev]` extras. The recorded environment used Python 3.14 and MuJoCo 3.16.0. That is package-loading evidence; the adapter's pinned runtime must perform its own dynamics checks.
+Use a separate checkout and environment. These commands were run from the Design repository after installing its documented `.[sim,dev]` extras. The recorded environment used Python 3.14 and MuJoCo 3.16.0. That is package-loading evidence; the demo's pinned runtime must perform its own dynamics checks.
 
 ```sh
 git clone https://github.com/KingKongRobotics/jumper-design.git
@@ -48,7 +48,7 @@ python3 -m venv .venv
 .venv/bin/python -m pip install -e '.[sim,dev]'
 ```
 
-Set the adapter directory to its actual local path, and use fresh output paths because the exporter refuses to replace an existing package:
+Set the demo directory to its actual local path, and use fresh output paths because the exporter refuses to replace an existing package:
 
 ```sh
 JUMPER_ADAPTER=/Users/vivek/projects/clawmetry-jumper
@@ -88,11 +88,11 @@ After attachment, remove the runner's previous duplicated tabletop, room floor a
 | Official native environment compilation | 40 bodies, 40 geoms, 2 lights, 10 materials, 0 qpos. |
 | Environment-only smoke | 1 second of native physics; all objects static. This is not a robot rollout. |
 | Official map export, hash and trusted profile validation | Passed, `/2`, 55 files. |
-| Official default robot + map composition | Native compile and forward passed on both Design MuJoCo 3.16.0 and adapter MuJoCo 3.11.0: 81 bodies, 23 joints including floating root, 122 geoms, 0 actuators. |
+| Official default robot + map composition | Native compile and forward passed on both Design MuJoCo 3.16.0 and demo MuJoCo 3.11.0: 81 bodies, 23 joints including floating root, 122 geoms, 0 actuators. |
 | Spawn support | Five rays within 0.05 m of the origin found actual desk collision and visual support at `z=0`; zero severe spawn contacts. Limited sampling only. |
 | Official import | Passed into a new directory; original package retained. |
 | Native visual inspection | Opened both `environment-native.png` and `default-composition-native.png`. Finite desk, seated proxy, props and complete original robot are visible without clipping. |
-| Policy playback, full footprint and boundary behavior after attachment | Required in the adapter; not established by this package check. |
+| Policy playback, full footprint and boundary behavior after attachment | Required in the demo; not established by this package check. |
 | Web importer, live browser physics, formal preview and hardware | Not run or claimed by this scene build. |
 
 The official native composition emitted its warning about attaching a child without an asset dictionary to a parent with one. Compilation, forward and the two actual renders passed. A subsequent host attachment must still verify resource resolution instead of assuming that the warning is harmless for all compositions.
@@ -105,7 +105,7 @@ The public Design repository does not contain the BE UNLIMITED simulator UI. Its
 
 A separate vanilla JavaScript host can use public maintained components for genuine live physics:
 
-- [MuJoCo's official JavaScript bindings](https://github.com/google-deepmind/mujoco/blob/main/wasm/README.md), Apache-2.0. The package `@mujoco/mujoco@3.11.0` matches the adapter engine and supplies ESM `mujoco.js` and `mujoco.wasm`. Its type declarations include `MjVFS.addBuffer`, `MjModel.from_xml_path(path, vfs)`, `mj_step` and `qfrc_applied`. Native loading is not browser proof.
+- [MuJoCo's official JavaScript bindings](https://github.com/google-deepmind/mujoco/blob/main/wasm/README.md), Apache-2.0. The package `@mujoco/mujoco@3.11.0` matches the demo engine and supplies ESM `mujoco.js` and `mujoco.wasm`. Its type declarations include `MjVFS.addBuffer`, `MjModel.from_xml_path(path, vfs)`, `mj_step` and `qfrc_applied`. Native loading is not browser proof.
 - The pinned Training bundle's `runtime/web/controller.js` and `controller.wasm` implement `WebFsm`, with its exact contracts and exported ONNX policies. Follow `deploy/fsm/BUNDLE_README.md`, including its reference replay and separate ONNX inference comparison. Do not replace its controller with visual joint animation.
 - [ONNX Runtime Web](https://onnxruntime.ai/docs/tutorials/web/deploy.html), MIT, supplies browser inference. Serve matching JS, loader and WASM files together; start with `numThreads=1`. A browser host must measure actual inference latency and avoid overlapping control ticks.
 - A renderer such as Three.js, MIT, displays geometry using the actual MuJoCo state. Its camera orbit can be interactive while playback is paused, but the UI must distinguish pause, live physics and recorded evidence.

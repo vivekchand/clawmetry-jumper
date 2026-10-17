@@ -2,11 +2,11 @@
 
 The product idea is a companion that supports sip, move and tidy without taking over the desk. Its default is to be quiet. Reminders can be skipped. A task grants only the specific movement, object and workspace permission it needs. A long work session is not blanket permission to move objects.
 
-This document separates source capabilities, this adapter's required proof and future skills. It makes no claim that the acceptance runs below have already passed.
+This document separates source capabilities, this demo's required proof and future skills. It makes no claim that the acceptance runs below have already passed.
 
 ## What the pinned upstream actually supplies
 
-Inspection used clean upstream commit `78966f45de6f2b6de3f7cea017f32a39f8b993e6` in the independent Jumper checkout. The main [manifest](https://github.com/KingKongRobotics/jumper/blob/78966f45de6f2b6de3f7cea017f32a39f8b993e6/deploy/manifests.json) includes posture locomotion, jump, claw modes and four greeting-style gestures. Exported policies and native controller contracts are useful starting points. Availability is distinct from passing a replay in this adapter and scene.
+Inspection used clean upstream commit `78966f45de6f2b6de3f7cea017f32a39f8b993e6` in the independent Jumper checkout. The main [manifest](https://github.com/KingKongRobotics/jumper/blob/78966f45de6f2b6de3f7cea017f32a39f8b993e6/deploy/manifests.json) includes posture locomotion, jump, claw modes and four greeting-style gestures. Exported policies and native controller contracts are useful starting points. Availability is distinct from passing a replay in this demo and scene.
 
 | Capability | Source evidence | What it establishes |
 |---|---|---|
@@ -72,4 +72,4 @@ This is a proposed contract for future task composition. Each permission should 
 
 For each run retain the pinned source and asset hashes, policy/controller versions, scene and object parameters, seed, task/decision/acknowledgement events, continuous state samples and uncut footage. Publish a compact report with attempted count, completed count, failures, unavailable outcomes, boundary violations, object drops and timing. Never discard failed attempts to improve the reported rate.
 
-The first release can truthfully describe an open-source local adapter and simulator permission experiment only after its own checks pass. Later captions may claim the exact object movement actually demonstrated. Hardware capability requires a separate controlled evaluation; simulator contact, a rendered calm skin and cross-runtime reference agreement do not establish real-world object handling or human safety.
+The first release can truthfully describe an open-source Mizu demo using built-in ClawMetry observation and task governance only after its own checks pass. Later captions may claim the exact object movement actually demonstrated. Hardware capability requires a separate controlled evaluation; simulator contact, a rendered calm skin and cross-runtime reference agreement do not establish real-world object handling or human safety.

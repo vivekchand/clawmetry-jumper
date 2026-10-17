@@ -5,17 +5,14 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "clawmetry-jumper"
 version = "0.1.0"
-description = "Open-source task boundaries and local evidence for Jumper desk companion simulations"
+description = "Mizu desk companion demo using built-in ClawMetry Physical AI observation"
 requires-python = ">=3.10"
 license = "Apache-2.0"
-dependencies = ["duckdb>=1.1", "flask>=3.0"]
+dependencies = ["clawmetry", "duckdb>=1.1"]
 
 [project.optional-dependencies]
 sim = ["mujoco==3.11.0", "numpy>=2.0", "onnxruntime>=1.17", "pillow>=10"]
 dev = ["pytest>=8"]
-
-[project.entry-points."clawmetry.extensions"]
-jumper = "clawmetry_jumper.plugin:register_all"
 
 [project.scripts]
 clawmetry-jumper = "clawmetry_jumper.cli:main"

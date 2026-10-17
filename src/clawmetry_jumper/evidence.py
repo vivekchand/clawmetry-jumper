@@ -1,8 +1,10 @@
-"""Bounded local evidence for the Jumper simulation.
+"""Optional film/demo capture sidecar, separate from ClawMetry's shared journal.
 
-The simulator and Flask should share one EvidenceStore object. DuckDB does not
-support a writer in one process with a reader in another process. A completed
-database can instead be opened with ``read_only=True``.
+The built-in ClawMetry daemon owns product ingestion, DuckDB and shared routes.
+This sidecar exists only to reproduce film annotations and demo measurements.
+A completed capture can be opened with ``read_only=True``; active readers share
+the same EvidenceStore object because DuckDB cannot coordinate cross-process
+writers and readers.
 """
 from __future__ import annotations
 

@@ -1,0 +1,2 @@
+# Preserve upstream legal texts byte-for-byte, including original CRLF/spacing.
+resources/browser-notices/** -text whitespace=-blank-at-eol,-blank-at-eof

@@ -1,6 +1,6 @@
 # Mizu's next desk companion: Jumper
 
-Production storyboard, 82 seconds. This is a filming plan, not a record that the adapter has passed its physics checks. Replace every provisional measurement with the recorder's real result before export.
+Production storyboard, 82 seconds. This is a filming plan, not a record that the demo has passed its physics checks. Replace every provisional measurement with the recorder's real result before export.
 
 ## Creative direction
 
@@ -20,7 +20,7 @@ Use muted sage for the shell, warm cream accents, dark moss joints and a sand-co
 | 30–41 s | Return to quiet stance. Sip reminder appears beside the stationary cup. Use an actual measured bow only if it fits the zone; otherwise the settled robot is sufficient. | “Then, a quiet nudge to drink. Today it can remind us. Bringing the glass is a separate skill we still need to prove.” | `Sip reminder` · `Cup transport: planned`. Do not show an attached or animated cup following the claw. |
 | 41–53 s | Same tabletop and continuous physics. A scripted test asks for a jump during the reminder task. The gate denies the request before it enters the native controller. Show the real request receipt and following controller state. | “A reminder is permission for that task. An unrelated jump request is declined before it reaches the controller.” | `Scripted scope test` · `Requested: jump` · `Denied: outside this task` · `Controller: [recorded mode]`. No cut implying an airborne robot was stopped. |
 | 53–63 s | Brief genuine stale-observation case. Keep any physics still running visible; pair the last available sample with its age. Do not freeze the video to suggest a physical stop. | “If observations go missing, the record says unknown. A missing picture cannot tell us that a robot has stopped.” | `Observation stale` · `New request denied` · `Physical outcome unknown`. Use actual sample age and receipt. |
-| 63–75 s | Calm end-of-work view. Display `Tidy after work?` beside a pen and tray. Then a small roadmap card, with no synthetic grasp animation. A short, separately labeled Mizu cleanup clip can illustrate the inspiration if it improves the edit. | “At the end of work, the ambition is to put one agreed object away. First an empty cup or notebook in simulation, with every step measured.” | `Next skills: empty-vessel placement · one-object tidy` · `Not demonstrated by this Jumper adapter`. Keep the desk boundary visible. |
+| 63–75 s | Calm end-of-work view. Display `Tidy after work?` beside a pen and tray. Then a small roadmap card, with no synthetic grasp animation. A short, separately labeled Mizu cleanup clip can illustrate the inspiration if it improves the edit. | “At the end of work, the ambition is to put one agreed object away. First an empty cup or notebook in simulation, with every step measured.” | `Next skills: empty-vessel placement · one-object tidy` · `Not demonstrated by this Jumper demo`. Keep the desk boundary visible. |
 | 75–82 s | Actual successful settled Jumper footage, then compact source and reproduction card. | “Useful company. Clear permission. Evidence of what actually happened.” | `Open-source local prototype` · `Native MuJoCo + upstream controller` · `Simulator evidence only`. Clickable sources belong in the accompanying description, not just rendered text. |
 
 If the full greeting needs more time, extend the edit to at most 90 seconds. Do not speed up a stumble, cut away from a failure, or substitute joint animation for controller-driven footage. The original Mizu inserts are optional; the complete Jumper story must still make sense without them.
@@ -29,7 +29,7 @@ If the full greeting needs more time, extend the edit to at most 90 seconds. Do 
 
 - Each simulator shot must identify its exact model, policy, controller, scene, seed and recorded session. Retain its uncut recording and local event evidence.
 - The desk is a finite tabletop with real collision geometry and a visible edge. Measure the robot's collision footprint against the allowed zone throughout each accepted clip. Body-origin containment alone is insufficient. Report any negative margin, fall, penetration or unexpected travel as a failed run. Do not teleport or clamp it back into the zone.
-- Permission, controller acceptance and measured outcome are separate captions. Denial proves that the adapter withheld that command, not that other command paths are impossible or that physics has become safe.
+- Permission, controller acceptance and measured outcome are separate captions. Denial proves that the demo withheld that command, not that other command paths are impossible or that physics has become safe.
 - The greeting must actually run locally before the narration says it can wave. Upstream availability alone is not local execution proof. If no gesture meets the tabletop criterion, show a settled robot and label gesture playback pending; do not release the planned success edit.
 - Keep `MuJoCo simulation` legible throughout simulator footage. State that no hardware control, human detection, fall prevention guarantee, liquid handling or autonomous tidying is demonstrated.
 - Render policy playback at recorded speed. A montage may shorten quiet time with an explicit cut, but must preserve the request-to-outcome sequence for the permission test.
@@ -38,7 +38,7 @@ If the full greeting needs more time, extend the edit to at most 90 seconds. Do 
 
 ## Sources and credits
 
-- Mizu inspiration: the linked post and the user-supplied original video. Attribute the Mizu team and event in the video description, using the post's exact names after checking spelling. Do not imply that a teammate endorsed this new adapter.
+- Mizu inspiration: the linked post and the user-supplied original video. Attribute the Mizu team and event in the video description, using the post's exact names after checking spelling. Do not imply that a teammate endorsed this new demo.
 - Jumper model, policies and native controller: [KingKong Robotics, pinned source](https://github.com/KingKongRobotics/jumper/tree/78966f45de6f2b6de3f7cea017f32a39f8b993e6). Retain its LICENSE and NOTICE alongside redistributed materials.
 - Policy names and integration contract: [pinned manifest](https://github.com/KingKongRobotics/jumper/blob/78966f45de6f2b6de3f7cea017f32a39f8b993e6/deploy/manifests.json) and [bundle format](https://github.com/KingKongRobotics/jumper/blob/78966f45de6f2b6de3f7cea017f32a39f8b993e6/deploy/BUNDLE.md).
-- Video description should link to the adapter's actual repository and reproduction instructions once available. No invented URL, contest submission, rights acceptance or publication is part of this storyboard.
+- Video description should link to the demo's actual repository and reproduction instructions once available. No invented URL, contest submission, rights acceptance or publication is part of this storyboard.

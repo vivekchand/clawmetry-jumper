@@ -17,12 +17,42 @@ from pathlib import Path
 import sys
 
 
+def scalar_joint_measurements(model, data, root_body):
+    """Read each named robot scalar joint through its declared MuJoCo addresses.
+
+    Scene props and the floating base are excluded. Slide units remain metres;
+    they must never be presented as angular measurements. Applied/controller
+    torques are not inferred from state or actuator array order.
+    """
+    import mujoco
+    measured = {"joint_positions_rad": {}, "joint_velocities_rad_s": {},
+                "joint_positions_m": {}, "joint_velocities_m_s": {}}
+    for index in range(model.njnt):
+        if model.body_rootid[model.jnt_bodyid[index]] != root_body:
+            continue
+        kind = model.jnt_type[index]
+        if kind == mujoco.mjtJoint.mjJNT_HINGE:
+            position_key, velocity_key = "joint_positions_rad", "joint_velocities_rad_s"
+        elif kind == mujoco.mjtJoint.mjJNT_SLIDE:
+            position_key, velocity_key = "joint_positions_m", "joint_velocities_m_s"
+        else:
+            continue
+        name = model.joint(index).name
+        if not name:
+            continue
+        measured[position_key][name] = float(data.qpos[model.jnt_qposadr[index]])
+        measured[velocity_key][name] = float(data.qvel[model.jnt_dofadr[index]])
+    return measured
+
+
 def parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--upstream", type=Path, required=True)
     p.add_argument("--scene", type=Path, required=True, help="Official .map scene package")
     p.add_argument("--video", type=Path, required=True)
     p.add_argument("--evidence", type=Path, required=True)
+    p.add_argument("--journal-dir", type=Path, default=None,
+                   help="Override ClawMetry's shared journal directory for isolated verification")
     p.add_argument("--run-id", default="mizu-official-replay")
     p.add_argument("--steps", type=int, default=7000)
     p.add_argument("--seed", type=int, default=42)
@@ -67,8 +97,7 @@ def run(args) -> dict:
     import numpy as np
     import mujoco
     from clawmetry_jumper.evidence import EvidenceStore
-    from clawmetry_jumper.guard import Request, Task, TaskGate
-    from clawmetry_jumper.monitor import DeskMonitor, NotificationOutbox
+    from clawmetry.physical_ai import DeskMonitor, JumperObserver, Request, Task, TaskGate
     import mjrl.app_play as app_play
     import tasks
 
@@ -88,9 +117,12 @@ def run(args) -> dict:
     store = EvidenceStore(args.evidence)
     task = Task("mizu-desk-reminders", frozenset({"wave", "bow"}),
                 bounds_xy=tuple(args.table_bounds))
-    gate = TaskGate(task, controls_enabled=args.enable_simulator_controls)
+    gate = TaskGate(task, controls_enabled=args.enable_simulator_controls,
+                    supported_actions={"wave", "bow"})
     monitor = DeskMonitor()
-    outbox = NotificationOutbox(store, args.run_id)
+    observer = JumperObserver("mizu-official", environment="simulation", directory=args.journal_dir,
+                              monitor=DeskMonitor(), sample_interval_s=.1)
+    observer.__enter__()
     state = {"steps": 0, "finite": True, "min_table_margin_m": None,
              "max_tilt_deg": 0., "modes": set(), "decisions": [], "resets": 0,
              "completed": False, "seed": args.seed, "renderer": "official ReplayVideo",
@@ -116,6 +148,7 @@ def run(args) -> dict:
             base = next(i for i in range(model.nbody) if model.body(i).name.endswith("/base_link"))
             self._clawmetry_base = base
             root = model.body_rootid[base]
+            self._clawmetry_root = root
             self._clawmetry_collision = np.array([
                 i for i in range(model.ngeom)
                 if model.body_rootid[model.geom_bodyid[i]] == root and
@@ -137,6 +170,7 @@ def run(args) -> dict:
                         elif max(rgba[:3]) < .15:
                             appearance.geom_rgba[i] = [.12, .20, .20, 1]
             self.latest = self.observation()
+            observer.observe(self.latest, now_s=0.)
             store.append(args.run_id, 0, "outcome", {
                 "status": "started", "evidence_kind": "simulation", "engine": "official Jumper play --app",
                 "controls_enabled": args.enable_simulator_controls, "task": asdict(task) | {"actions": sorted(task.actions), "objects": []},
@@ -160,6 +194,7 @@ def run(args) -> dict:
             mujoco.mj_objectVelocity(model, data, mujoco.mjtObj.mjOBJ_BODY, base, velocity, 0)
             tilt = math.degrees(math.acos(float(np.clip(data.xmat[base].reshape(3, 3)[2, 2], -1, 1))))
             return {"time_s": self._clawmetry_count * env.step_dt,
+                    **scalar_joint_measurements(model, data, self._clawmetry_root),
                     "position_m": data.xpos[base].tolist(), "quat_wxyz": data.xquat[base].tolist(),
                     "base_velocity_m_s": velocity[3:].tolist(), "tilt_deg": tilt,
                     "collision_aabb_m": {"min": low.tolist(), "max": high.tolist()},
@@ -179,7 +214,7 @@ def run(args) -> dict:
                     continue
                 self._clawmetry_sent.add(action)
                 request = Request(f"official-{action}", task.task_id, action)
-                decision = gate.decide(request, self.latest, now_s=now)
+                decision = observer.decide(gate, request, self.latest, now_s=now)
                 store.append(args.run_id, now, "reminder", {
                     "message": {"wave": "Take a sip of water", "bow": "A gentle stretch break",
                                 "jump": "Jump requested outside the desk-reminder task"}[action],
@@ -193,6 +228,8 @@ def run(args) -> dict:
                     store.append(args.run_id, now, "controller", {
                         "request_id": request.request_id, "key": key, "bound": bool(bound),
                         "status": "input_delivered", "physical_stop_confirmed": False})
+                    observer.emit("controller.receipt", {"request_id": request.request_id,
+                        "key": key, "bound": bool(bound), "status": "input_delivered", "time_s": now})
             return super().__call__(obs)
 
         def _report(self):
@@ -201,6 +238,7 @@ def run(args) -> dict:
                 receipt = {"time_s": at / 1e6, "from": source, "to": target,
                            "rule": rule, "condition": why, "evidence_kind": "simulation"}
                 store.append(args.run_id, at / 1e6, "controller", receipt)
+                observer.emit("controller.receipt", {"receipt_type": "mode_transition", **receipt})
                 self._clawmetry_logs.append(receipt)
                 print(f"\n[clawmetry] native {source} -> {target}: {why}")
             super()._report()
@@ -211,11 +249,13 @@ def run(args) -> dict:
             now = self._clawmetry_count * self._env.unwrapped.step_dt
             if bool(dones.any()):
                 state["resets"] += 1
+                observer.check(now)
                 store.append(args.run_id, now, "outcome", {
                     "status": "episode_ended", "outcome": "unknown", "evidence_kind": "simulation",
                     "message": "Official environment ended and reset; recording stops before displaying that reset."})
                 return
             self.latest = self.observation()
+            observer.observe(self.latest, now_s=now)
             state["finite"] = state["finite"] and self.latest["finite"]
             state["modes"].add(self.latest["mode"])
             old_margin = state["min_table_margin_m"]
@@ -225,7 +265,9 @@ def run(args) -> dict:
                 store.append(args.run_id, now, "observation", self.latest)
             for alert in monitor.update(self.latest, now):
                 store.append(args.run_id, now, "alert", alert)
-                outbox.submit(alert, sim_time_s=now)
+                store.append(args.run_id, now, "notification", {"alert_type": alert["type"],
+                    "status": "not_configured", "phone_delivery_confirmed": False,
+                    "scope": "demo_capture_only"})
 
     def observed_loop(env, policy, *pos, **kw):
         original_step = env.step
@@ -260,6 +302,8 @@ def run(args) -> dict:
         state["official_argv"] = official_arguments(args)
         state["upstream_files_modified"] = False
         state["physical_stop_confirmed"] = False
+        observer.__exit__(*sys.exc_info())
+        state["shared_observer"] = observer.status()
         args.video.with_suffix(".clawmetry.json").write_text(json.dumps(state, indent=2, allow_nan=False) + "\n")
         store.append(args.run_id, state["steps"] * .005, "outcome", state)
         store.close()
