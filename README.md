@@ -2,10 +2,8 @@
 
 A calm desk companion demo, with a clear task and a record of what it actually did.
 
-**Development preview:** the built-in Jumper observer is pending the ordinary
-ClawMetry release from [core PR 6473](https://github.com/vivekchand/clawmetry/pull/6473).
-Until that release is published, use the exact development install below. The
-normal one-package command describes the intended released installation.
+Built-in Jumper support is available in ClawMetry 0.12.930 and later.
+The normal package includes the observer and Physical AI history.
 
 ![Native Jumper simulation with our desk scene and seated person](docs/images/desk-scene.png)
 
@@ -15,7 +13,7 @@ verified source/asset provenance, authored desk scene, companion skills, browser
 playground and review film. It ships no second ClawMetry extension or dashboard.
 
 ```sh
-pip install clawmetry
+pip install "clawmetry>=0.12.930"
 clawmetry
 ```
 
@@ -92,17 +90,12 @@ for each recording. The normal observer journal directory makes the run visible
 to the standard ClawMetry collector; `--journal-dir` is an explicit override for
 isolated tests. There is no separate `serve` command or external extension install.
 
-During development before the corresponding ClawMetry release, install the
-exact main-package candidate into the demo environment first:
+The editable demo installs the ordinary published ClawMetry package from PyPI.
+It does not need a Git candidate or a separate observer package. To run its checks:
 
 ```sh
-.venv/bin/python -m pip install "clawmetry @ git+https://github.com/vivekchand/clawmetry.git@070aa27f6b42294f3a31bccf88b08dad0ac0a86d"
-.venv/bin/python -m pip install -e '.[sim,dev]'
 .venv/bin/python -m pytest -q
 ```
-
-This is a source-development path, not a dependency on an invented unpublished
-version. The distribution dependency remains ordinary `clawmetry`.
 
 For the official simulator, including the desk and seated person, follow
 [scene preparation](docs/scene-build.md) and [official replay](docs/official-replay.md).

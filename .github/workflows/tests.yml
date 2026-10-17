@@ -13,9 +13,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      # Development preview: replace with a released minimum only after core PR 6473 ships.
-      - name: Install exact built-in ClawMetry candidate
-        run: python -m pip install "clawmetry @ git+https://github.com/vivekchand/clawmetry.git@070aa27f6b42294f3a31bccf88b08dad0ac0a86d"
+      - name: Install the released built-in ClawMetry minimum
+        run: python -m pip install clawmetry==0.12.930
       - name: Install isolated playback dependencies
         run: python -m pip install -e '.[sim,dev]'
       - name: Fetch pinned public Jumper inputs
