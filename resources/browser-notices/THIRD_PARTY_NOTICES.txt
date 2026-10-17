@@ -1,0 +1,204 @@
+ClawMetry Jumper browser experiment: third-party notices
+
+This delivery preserves the license texts and source notices listed below.
+Each referenced file is included in the self-hosted bundle.
+
+Official Jumper model, controller and policies:
+  assets/UPSTREAM_LICENSE
+  assets/UPSTREAM_NOTICE
+
+MuJoCo 3.11.0: vendor/mujoco/LICENSE
+Pinned core/WASM dependency inventory: vendor/mujoco/dependency-license-inventory.json
+  libccd at 7931e764a19ef6b21b443376c699bbc9c6d4fba8
+    vendor/mujoco/licenses/libccd-BSD.txt
+    Source: https://raw.githubusercontent.com/danfis/libccd/7931e764a19ef6b21b443376c699bbc9c6d4fba8/BSD-LICENSE
+  qhull at d1c2fc0caa5f644f3a0f220290d4a868c68ed4f6
+    vendor/mujoco/licenses/qhull-COPYING.txt
+    Source: https://raw.githubusercontent.com/qhull/qhull/d1c2fc0caa5f644f3a0f220290d4a868c68ed4f6/COPYING.txt
+  tinyxml2 at e6caeae85799003f4ca74ff26ee16a789bc2af48
+    vendor/mujoco/licenses/tinyxml2-LICENSE.txt
+    Source: https://raw.githubusercontent.com/leethomason/tinyxml2/e6caeae85799003f4ca74ff26ee16a789bc2af48/LICENSE.txt
+  tinyobjloader at 1421a10d6ed9742f5b2c1766d22faa6cfbc56248
+    vendor/mujoco/licenses/tinyobjloader-LICENSE.txt
+    Source: https://raw.githubusercontent.com/tinyobjloader/tinyobjloader/1421a10d6ed9742f5b2c1766d22faa6cfbc56248/LICENSE
+  lodepng at 17d08dd26cac4d63f43af217ebd70318bfb8189c
+    vendor/mujoco/licenses/lodepng-LICENSE.txt
+    Source: https://raw.githubusercontent.com/lvandeve/lodepng/17d08dd26cac4d63f43af217ebd70318bfb8189c/LICENSE
+  miniz at d10b03cc73475af673df40f06e5cefd1d5f940d9
+    vendor/mujoco/licenses/miniz-LICENSE.txt
+    Source: https://raw.githubusercontent.com/richgel999/miniz/d10b03cc73475af673df40f06e5cefd1d5f940d9/LICENSE
+  MarchingCubeCpp at f03a1b3ec29b1d7d865691ca8aea4f1eb2c2873d
+    vendor/mujoco/licenses/MarchingCubeCpp-PUBLIC-DOMAIN.md
+    Source: https://raw.githubusercontent.com/aparis69/MarchingCubeCpp/f03a1b3ec29b1d7d865691ca8aea4f1eb2c2873d/README.md
+  Emscripten at 4.0.10
+    vendor/mujoco/licenses/Emscripten-LICENSE.txt
+    Source: https://raw.githubusercontent.com/emscripten-core/emscripten/4.0.10/LICENSE
+
+Official Jumper WebFsm Rust controller:
+  assets/controller-licenses/inventory.json
+  assets/controller-licenses/Cargo.lock
+  assets/controller-licenses/Cargo.toml
+Normal/transitive and build-time dependencies are distinguished in that inventory.
+Build-time notices are retained conservatively; hardware and Python features are not enabled.
+  bindgen 0.70.1 (BSD-3-Clause)
+    assets/controller-licenses/bindgen-0.70.1/LICENSE
+  bitflags 2.13.1 (MIT OR Apache-2.0)
+    assets/controller-licenses/bitflags-2.13.1/LICENSE-APACHE
+    assets/controller-licenses/bitflags-2.13.1/LICENSE-MIT
+  bumpalo 3.20.3 (MIT OR Apache-2.0)
+    assets/controller-licenses/bumpalo-3.20.3/LICENSE-APACHE
+    assets/controller-licenses/bumpalo-3.20.3/LICENSE-MIT
+  cc 1.4.5 (MIT OR Apache-2.0)
+    assets/controller-licenses/cc-1.4.5/LICENSE-APACHE
+    assets/controller-licenses/cc-1.4.5/LICENSE-MIT
+  cexpr 0.6.0 (Apache-2.0/MIT)
+    assets/controller-licenses/cexpr-0.6.0/LICENSE-APACHE
+    assets/controller-licenses/cexpr-0.6.0/LICENSE-MIT
+  cfg-if 1.0.4 (MIT OR Apache-2.0)
+    assets/controller-licenses/cfg-if-1.0.4/LICENSE-APACHE
+    assets/controller-licenses/cfg-if-1.0.4/LICENSE-MIT
+  clang-sys 1.9.1 (Apache-2.0)
+    assets/controller-licenses/clang-sys-1.9.1/LICENSE.txt
+  either 1.18.0 (MIT OR Apache-2.0)
+    assets/controller-licenses/either-1.18.0/LICENSE-APACHE
+    assets/controller-licenses/either-1.18.0/LICENSE-MIT
+  equivalent 1.0.2 (Apache-2.0 OR MIT)
+    assets/controller-licenses/equivalent-1.0.2/LICENSE-APACHE
+    assets/controller-licenses/equivalent-1.0.2/LICENSE-MIT
+  find-msvc-tools 0.1.12 (MIT OR Apache-2.0)
+    assets/controller-licenses/find-msvc-tools-0.1.12/LICENSE-APACHE
+    assets/controller-licenses/find-msvc-tools-0.1.12/LICENSE-MIT
+  glob 0.3.4 (MIT OR Apache-2.0)
+    assets/controller-licenses/glob-0.3.4/LICENSE-APACHE
+    assets/controller-licenses/glob-0.3.4/LICENSE-MIT
+  hashbrown 0.17.1 (MIT OR Apache-2.0)
+    assets/controller-licenses/hashbrown-0.17.1/LICENSE-APACHE
+    assets/controller-licenses/hashbrown-0.17.1/LICENSE-MIT
+  indexmap 2.14.2 (Apache-2.0 OR MIT)
+    assets/controller-licenses/indexmap-2.14.2/LICENSE-APACHE
+    assets/controller-licenses/indexmap-2.14.2/LICENSE-MIT
+  itertools 0.13.0 (MIT OR Apache-2.0)
+    assets/controller-licenses/itertools-0.13.0/LICENSE-APACHE
+    assets/controller-licenses/itertools-0.13.0/LICENSE-MIT
+  itoa 1.0.18 (MIT OR Apache-2.0)
+    assets/controller-licenses/itoa-1.0.18/LICENSE-APACHE
+    assets/controller-licenses/itoa-1.0.18/LICENSE-MIT
+  libc 0.2.189 (MIT OR Apache-2.0)
+    assets/controller-licenses/libc-0.2.189/LICENSE-APACHE
+    assets/controller-licenses/libc-0.2.189/LICENSE-MIT
+  libloading 0.8.9 (ISC)
+    assets/controller-licenses/libloading-0.8.9/LICENSE
+  log 0.4.34 (MIT OR Apache-2.0)
+    assets/controller-licenses/log-0.4.34/LICENSE-APACHE
+    assets/controller-licenses/log-0.4.34/LICENSE-MIT
+  memchr 2.8.3 (Unlicense OR MIT)
+    assets/controller-licenses/memchr-2.8.3/COPYING
+    assets/controller-licenses/memchr-2.8.3/LICENSE-MIT
+  minimal-lexical 0.2.1 (MIT/Apache-2.0)
+    assets/controller-licenses/minimal-lexical-0.2.1/LICENSE.md
+    assets/controller-licenses/minimal-lexical-0.2.1/LICENSE-APACHE
+    assets/controller-licenses/minimal-lexical-0.2.1/LICENSE-MIT
+  nom 7.1.3 (MIT)
+    assets/controller-licenses/nom-7.1.3/LICENSE
+  once_cell 1.21.4 (MIT OR Apache-2.0)
+    assets/controller-licenses/once_cell-1.21.4/LICENSE-APACHE
+    assets/controller-licenses/once_cell-1.21.4/LICENSE-MIT
+  prettyplease 0.2.37 (MIT OR Apache-2.0)
+    assets/controller-licenses/prettyplease-0.2.37/LICENSE-APACHE
+    assets/controller-licenses/prettyplease-0.2.37/LICENSE-MIT
+  proc-macro2 1.0.107 (MIT OR Apache-2.0)
+    assets/controller-licenses/proc-macro2-1.0.107/LICENSE-APACHE
+    assets/controller-licenses/proc-macro2-1.0.107/LICENSE-MIT
+  quote 1.0.47 (MIT OR Apache-2.0)
+    assets/controller-licenses/quote-1.0.47/LICENSE-APACHE
+    assets/controller-licenses/quote-1.0.47/LICENSE-MIT
+  regex 1.13.1 (MIT OR Apache-2.0)
+    assets/controller-licenses/regex-1.13.1/LICENSE-APACHE
+    assets/controller-licenses/regex-1.13.1/LICENSE-MIT
+  regex-automata 0.4.18 (MIT OR Apache-2.0)
+    assets/controller-licenses/regex-automata-0.4.18/LICENSE-APACHE
+    assets/controller-licenses/regex-automata-0.4.18/LICENSE-MIT
+  regex-syntax 0.8.11 (MIT OR Apache-2.0)
+    assets/controller-licenses/regex-syntax-0.8.11/LICENSE-APACHE
+    assets/controller-licenses/regex-syntax-0.8.11/LICENSE-MIT
+  rustc-hash 1.1.0 (Apache-2.0/MIT)
+    assets/controller-licenses/rustc-hash-1.1.0/LICENSE-APACHE
+    assets/controller-licenses/rustc-hash-1.1.0/LICENSE-MIT
+  rustversion 1.0.23 (MIT OR Apache-2.0)
+    assets/controller-licenses/rustversion-1.0.23/LICENSE-APACHE
+    assets/controller-licenses/rustversion-1.0.23/LICENSE-MIT
+  serde 1.0.229 (MIT OR Apache-2.0)
+    assets/controller-licenses/serde-1.0.229/LICENSE-APACHE
+    assets/controller-licenses/serde-1.0.229/LICENSE-MIT
+  serde_core 1.0.229 (MIT OR Apache-2.0)
+    assets/controller-licenses/serde_core-1.0.229/LICENSE-APACHE
+    assets/controller-licenses/serde_core-1.0.229/LICENSE-MIT
+  serde_derive 1.0.229 (MIT OR Apache-2.0)
+    assets/controller-licenses/serde_derive-1.0.229/LICENSE-APACHE
+    assets/controller-licenses/serde_derive-1.0.229/LICENSE-MIT
+  serde_json 1.0.151 (MIT OR Apache-2.0)
+    assets/controller-licenses/serde_json-1.0.151/LICENSE-APACHE
+    assets/controller-licenses/serde_json-1.0.151/LICENSE-MIT
+  serde_spanned 0.6.9 (MIT OR Apache-2.0)
+    assets/controller-licenses/serde_spanned-0.6.9/LICENSE-APACHE
+    assets/controller-licenses/serde_spanned-0.6.9/LICENSE-MIT
+  shlex 1.3.0 (MIT OR Apache-2.0)
+    assets/controller-licenses/shlex-1.3.0/LICENSE-APACHE
+    assets/controller-licenses/shlex-1.3.0/LICENSE-MIT
+  shlex 2.0.1 (MIT OR Apache-2.0)
+    assets/controller-licenses/shlex-2.0.1/LICENSE-APACHE
+    assets/controller-licenses/shlex-2.0.1/LICENSE-MIT
+  syn 2.0.119 (MIT OR Apache-2.0)
+    assets/controller-licenses/syn-2.0.119/LICENSE-APACHE
+    assets/controller-licenses/syn-2.0.119/LICENSE-MIT
+  syn 3.0.5 (MIT OR Apache-2.0)
+    assets/controller-licenses/syn-3.0.5/LICENSE-APACHE
+    assets/controller-licenses/syn-3.0.5/LICENSE-MIT
+  toml 0.8.23 (MIT OR Apache-2.0)
+    assets/controller-licenses/toml-0.8.23/LICENSE-APACHE
+    assets/controller-licenses/toml-0.8.23/LICENSE-MIT
+  toml_datetime 0.6.11 (MIT OR Apache-2.0)
+    assets/controller-licenses/toml_datetime-0.6.11/LICENSE-APACHE
+    assets/controller-licenses/toml_datetime-0.6.11/LICENSE-MIT
+  toml_edit 0.22.27 (MIT OR Apache-2.0)
+    assets/controller-licenses/toml_edit-0.22.27/LICENSE-APACHE
+    assets/controller-licenses/toml_edit-0.22.27/LICENSE-MIT
+  toml_write 0.1.2 (MIT OR Apache-2.0)
+    assets/controller-licenses/toml_write-0.1.2/LICENSE-APACHE
+    assets/controller-licenses/toml_write-0.1.2/LICENSE-MIT
+  unicode-ident 1.0.24 ((MIT OR Apache-2.0) AND Unicode-3.0)
+    assets/controller-licenses/unicode-ident-1.0.24/LICENSE-UNICODE
+    assets/controller-licenses/unicode-ident-1.0.24/LICENSE-APACHE
+    assets/controller-licenses/unicode-ident-1.0.24/LICENSE-MIT
+  wasm-bindgen 0.2.128 (MIT OR Apache-2.0)
+    assets/controller-licenses/wasm-bindgen-0.2.128/LICENSE-APACHE
+    assets/controller-licenses/wasm-bindgen-0.2.128/LICENSE-MIT
+  wasm-bindgen-macro 0.2.128 (MIT OR Apache-2.0)
+    assets/controller-licenses/wasm-bindgen-macro-0.2.128/LICENSE-APACHE
+    assets/controller-licenses/wasm-bindgen-macro-0.2.128/LICENSE-MIT
+  wasm-bindgen-macro-support 0.2.128 (MIT OR Apache-2.0)
+    assets/controller-licenses/wasm-bindgen-macro-support-0.2.128/LICENSE-APACHE
+    assets/controller-licenses/wasm-bindgen-macro-support-0.2.128/LICENSE-MIT
+  wasm-bindgen-shared 0.2.128 (MIT OR Apache-2.0)
+    assets/controller-licenses/wasm-bindgen-shared-0.2.128/LICENSE-APACHE
+    assets/controller-licenses/wasm-bindgen-shared-0.2.128/LICENSE-MIT
+  winnow 0.7.15 (MIT)
+    assets/controller-licenses/winnow-0.7.15/LICENSE-MIT
+  zmij 1.0.23 (MIT)
+    assets/controller-licenses/zmij-1.0.23/LICENSE-MIT
+
+Rust standard library copyright and license notices:
+  assets/controller-licenses/rust-stdlib/inventory.json
+  assets/controller-licenses/rust-stdlib/COPYRIGHT
+  assets/controller-licenses/rust-stdlib/LICENSE-APACHE
+  assets/controller-licenses/rust-stdlib/LICENSE-MIT
+
+ONNX Runtime Web 1.30.0:
+  vendor/ort/LICENSE
+  vendor/ort/ThirdPartyNotices.txt
+
+Three.js 0.178.0:
+  vendor/three/LICENSE
+
+The upstream controller binary is supplied by its bundle. The source/lock inventory
+does not assert a bit-reproducible build. See deployment-manifest.json for exact hashes.

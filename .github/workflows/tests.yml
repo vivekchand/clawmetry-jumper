@@ -1,0 +1,54 @@
+name: Mizu demo checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install the released built-in ClawMetry minimum
+        run: python -m pip install clawmetry==0.12.930
+      - name: Install isolated playback dependencies
+        run: python -m pip install -e '.[sim,dev]'
+      - name: Fetch pinned public Jumper inputs
+        run: |
+          git init ../clawmetry-jumper-upstream
+          git -C ../clawmetry-jumper-upstream remote add origin https://github.com/KingKongRobotics/jumper.git
+          git -C ../clawmetry-jumper-upstream fetch --depth 1 origin 78966f45de6f2b6de3f7cea017f32a39f8b993e6
+          git -C ../clawmetry-jumper-upstream checkout --detach FETCH_HEAD
+      - name: Test built-in ClawMetry integration and actual native controller physics
+        run: python -m pytest -q
+      - name: Fetch official Design compiler
+        run: |
+          git init ../clawmetry-jumper-design-upstream
+          git -C ../clawmetry-jumper-design-upstream remote add origin https://github.com/KingKongRobotics/jumper-design.git
+          git -C ../clawmetry-jumper-design-upstream fetch --depth 1 origin 918d192857fcea1678c2a40b339501004a94d838
+          git -C ../clawmetry-jumper-design-upstream checkout --detach FETCH_HEAD
+          python -m pip install --no-deps -e ../clawmetry-jumper-design-upstream
+          python -m pip install jsonschema playwright==1.64.0
+          python -m playwright install --with-deps chromium
+      - name: Build official scene and pinned local browser assets
+        run: |
+          python -m mjscene build scenes/mizu-desk.scene.json --out artifacts/browser-scene --smoke 1
+          python scripts/prepare_web_assets.py --upstream ../clawmetry-jumper-upstream --scene artifacts/browser-scene/mizu-desk/scene.xml
+      - name: Qualify real browser physics and lifecycle
+        run: |
+          python -m http.server 8957 --bind 127.0.0.1 --directory web > /tmp/jumper-browser-server.log 2>&1 &
+          trap 'kill $(jobs -p) 2>/dev/null || true' EXIT
+          curl --fail --silent --show-error --retry 5 --retry-connrefused --retry-delay 1 http://127.0.0.1:8957/ > /dev/null
+          python web/tests/browser_acceptance.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mizu-browser-evidence
+          path: |
+            web/test-results/
+            web/asset-build.json
+            /tmp/jumper-browser-server.log

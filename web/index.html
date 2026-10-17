@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Meet a gentle desk companion in a live, local Jumper physics simulation. See task boundaries and the evidence of what happened.">
+  <title>Jumper desk companion · ClawMetry</title>
+  <link rel="stylesheet" href="./style.css">
+  <script type="importmap">{"imports":{"three":"./vendor/three/three.module.js"}}</script>
+</head>
+<body>
+<main>
+  <header><a class="brand" href="https://clawmetry.com/">Claw<span>Metry</span></a><span class="eyebrow">PHYSICAL AI PLAYGROUND</span></header>
+  <section class="intro"><div><p class="eyebrow">A LITTLE COMPANY FOR YOUR WORKDAY</p><h1>A helpful companion.<br>A clear little world.</h1><p class="lede">Stretch, sip, and finish the day. Meet Jumper beside the desk and see how a small task stays a small task.</p></div><div class="intro-note">Real MuJoCo physics<br>Official Jumper policies<br>Runs locally in your browser</div></section>
+  <section class="playground" aria-label="Jumper simulation">
+    <div class="viewport-wrap"><div id="viewport" aria-label="Live three dimensional robot simulation"></div><div class="scene-label"><span id="live-dot"></span><span id="run-label">Simulation not started</span></div><div id="start-overlay"><div class="start-card"><span class="eyebrow">YOUR DESK COMPANION, IN SIMULATION</span><h2>Say hello to Jumper.</h2><p>Start a real physics simulation on this device. It loads about 70 MB of public robot, scene and runtime assets. No camera, microphone or hardware connection.</p><button id="start" class="primary">Start simulation <span aria-hidden="true">↗</span></button><p id="load-status" role="status">Desktop Chrome recommended. WebGL and WebAssembly required.</p></div></div><div class="camera-hint">Drag to orbit · Scroll to zoom</div></div>
+    <aside>
+      <div class="task-card"><span class="eyebrow">AUTHORIZED TASK</span><h2>Offer a gentle reminder.</h2><p>One greeting gesture when you ask. Cup handling and travel are outside this task.</p><div class="task-actions"><button data-action="wave" disabled>👋 Say hello</button><button data-action="bow" disabled>🌿 Stretch reminder</button></div><button id="pause" disabled>Pause simulation</button><button id="reset" disabled>Start a fresh scene</button></div>
+      <div class="metrics"><div><span>Controller</span><strong id="mode">Waiting</strong></div><div><span>Simulated time</span><strong id="sim-time">0.00 s</strong></div><div><span>Measured edge margin</span><strong id="margin">Unavailable</strong></div><div><span>Observation</span><strong id="observation">Not started</strong></div></div>
+      <div class="phone"><div class="phone-top">ON-SCREEN ALERT PREVIEW</div><div id="notice" role="status">Jumper will wait for your first request.</div><small>A browser preview. No phone notification is sent.</small></div>
+    </aside>
+  </section>
+  <section class="experiments"><div><p class="eyebrow">TRY A SMALL EXPERIMENT</p><h2>What happens outside the task?</h2><p>These are explicit simulator tests. Physics keeps running after a request is declined, a force is removed, or the observation feed is interrupted.</p></div><div class="experiment-buttons"><button data-action="jump" disabled>Ask for an unrelated jump</button><button data-action="cup" disabled>Ask to bring the cup</button><button data-action="lift" disabled>Apply a lifting force</button><button data-action="drift" disabled>Apply a sideways force</button><button data-action="stale" disabled>Interrupt the observation feed</button></div></section>
+  <section class="evidence"><div class="section-head"><div><p class="eyebrow">PERMISSION → CONTROLLER → MEASUREMENT</p><h2>The local evidence.</h2></div><button id="export" disabled>Download this session</button></div><ol id="timeline" aria-live="polite"><li>Start the simulation to collect local evidence.</li></ol><details><summary>What this demonstrates</summary><p>The model, pretrained policies, native controller and scene come from the public Jumper projects. ClawMetry filters the task requests in this page and shows measured simulator events. A denied request was not forwarded by this page. This does not guarantee containment or physical safety.</p><p>The seated person is a static geometric proxy. The cup and desk objects are stationary. No human detection, glass delivery, liquid handling, or autonomous tidying is demonstrated. The controller stabilizes the simulated robot; ClawMetry does not replace that controller.</p><p id="qualification">Browser qualification runs after start.</p></details></section>
+  <footer><span>Local prototype · Simulator evidence only</span><nav><a href="https://clawmetry.com/physical-ai">The Physical AI vision</a><a href="https://github.com/vivekchand/clawmetry">Source & reproduction</a><a href="./assets/UPSTREAM_NOTICE">Jumper credits</a></nav></footer>
+</main>
+<script type="module" src="./app.js"></script>
+</body></html>

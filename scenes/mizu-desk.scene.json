@@ -1,0 +1,1001 @@
+{
+  "name": "mizu-desk",
+  "title": "Mizu Desk Companion",
+  "description": "Finite tabletop for a local Jumper simulation, with a static seated human proxy, laptop and stationary sip and tidy props. Proxy geometry is not human detection or a biomechanical model. No manipulation, liquid, containment guarantee or hardware behavior is supplied by this map.",
+  "tags": [
+    "authored",
+    "desk_companion",
+    "static_human_proxy",
+    "simulation_only"
+  ],
+  "spawn": {
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "yaw": 0,
+    "clearance": 0.5,
+    "bounds": [
+      -0.86,
+      -0.58,
+      -0.75,
+      0.86,
+      0.58,
+      1.0
+    ]
+  },
+  "sky": {
+    "preset": "studio",
+    "fog": false
+  },
+  "lighting": {
+    "preset": "indoor_office",
+    "headlight": false,
+    "shadows": true
+  },
+  "ground": {
+    "type": "plane",
+    "pos": [
+      0,
+      0,
+      -0.75
+    ],
+    "size": [
+      3,
+      3
+    ],
+    "material": "room_floor",
+    "friction": "concrete"
+  },
+  "materials": [
+    {
+      "name": "desk_sand",
+      "rgba": [
+        0.73,
+        0.62,
+        0.45,
+        1
+      ],
+      "reflectance": 0,
+      "shininess": 0.15,
+      "specular": 0.15,
+      "roughness": 0.8
+    },
+    {
+      "name": "desk_sage",
+      "rgba": [
+        0.47,
+        0.6,
+        0.47,
+        1
+      ],
+      "reflectance": 0,
+      "shininess": 0.15,
+      "specular": 0.15,
+      "roughness": 0.8
+    },
+    {
+      "name": "desk_moss",
+      "rgba": [
+        0.24,
+        0.33,
+        0.29,
+        1
+      ],
+      "reflectance": 0,
+      "shininess": 0.15,
+      "specular": 0.15,
+      "roughness": 0.8
+    },
+    {
+      "name": "device_slate",
+      "rgba": [
+        0.16,
+        0.2,
+        0.23,
+        1
+      ],
+      "reflectance": 0,
+      "shininess": 0.15,
+      "specular": 0.15,
+      "roughness": 0.8
+    },
+    {
+      "name": "display_soft",
+      "rgba": [
+        0.37,
+        0.51,
+        0.54,
+        1
+      ],
+      "reflectance": 0,
+      "shininess": 0.15,
+      "specular": 0.15,
+      "roughness": 0.8
+    },
+    {
+      "name": "cup_cream",
+      "rgba": [
+        0.92,
+        0.87,
+        0.75,
+        1
+      ],
+      "reflectance": 0,
+      "shininess": 0.15,
+      "specular": 0.15,
+      "roughness": 0.8
+    },
+    {
+      "name": "person_trousers",
+      "rgba": [
+        0.2,
+        0.27,
+        0.32,
+        1
+      ],
+      "reflectance": 0,
+      "shininess": 0.15,
+      "specular": 0.15,
+      "roughness": 0.8
+    },
+    {
+      "name": "person_shirt",
+      "rgba": [
+        0.62,
+        0.69,
+        0.62,
+        1
+      ],
+      "reflectance": 0,
+      "shininess": 0.15,
+      "specular": 0.15,
+      "roughness": 0.8
+    },
+    {
+      "name": "person_skin",
+      "rgba": [
+        0.66,
+        0.46,
+        0.32,
+        1
+      ],
+      "reflectance": 0,
+      "shininess": 0.15,
+      "specular": 0.15,
+      "roughness": 0.8
+    },
+    {
+      "name": "room_floor",
+      "rgba": [
+        0.77,
+        0.79,
+        0.74,
+        1
+      ],
+      "reflectance": 0,
+      "shininess": 0.15,
+      "specular": 0.15,
+      "roughness": 0.8
+    }
+  ],
+  "friction_profiles": [
+    {
+      "name": "desk_contact",
+      "sliding": 1.0,
+      "torsional": 0.005,
+      "rolling": 0.0001,
+      "condim": 3,
+      "note": "Matches native runner support contact. No friction increase for confinement."
+    }
+  ],
+  "objects": [
+    {
+      "name": "desk_top",
+      "shape": "box",
+      "size": [
+        0.86,
+        0.58,
+        0.025
+      ],
+      "pos": [
+        0,
+        0,
+        -0.025
+      ],
+      "kind": "static",
+      "material": "desk_sand",
+      "friction": "desk_contact",
+      "condim": 3,
+      "tags": [
+        "finite_support",
+        "top_z_0"
+      ]
+    },
+    {
+      "name": "desk_leg_fl",
+      "shape": "box",
+      "size": [
+        0.028,
+        0.028,
+        0.35
+      ],
+      "pos": [
+        -0.76,
+        -0.48,
+        -0.4
+      ],
+      "kind": "static",
+      "material": "desk_moss"
+    },
+    {
+      "name": "desk_leg_fr",
+      "shape": "box",
+      "size": [
+        0.028,
+        0.028,
+        0.35
+      ],
+      "pos": [
+        0.76,
+        -0.48,
+        -0.4
+      ],
+      "kind": "static",
+      "material": "desk_moss"
+    },
+    {
+      "name": "desk_leg_bl",
+      "shape": "box",
+      "size": [
+        0.028,
+        0.028,
+        0.35
+      ],
+      "pos": [
+        -0.76,
+        0.48,
+        -0.4
+      ],
+      "kind": "static",
+      "material": "desk_moss"
+    },
+    {
+      "name": "desk_leg_br",
+      "shape": "box",
+      "size": [
+        0.028,
+        0.028,
+        0.35
+      ],
+      "pos": [
+        0.76,
+        0.48,
+        -0.4
+      ],
+      "kind": "static",
+      "material": "desk_moss"
+    },
+    {
+      "name": "laptop_base",
+      "shape": "box",
+      "size": [
+        0.19,
+        0.105,
+        0.009
+      ],
+      "pos": [
+        -0.59,
+        0.38,
+        0.009
+      ],
+      "kind": "static",
+      "material": "device_slate",
+      "tags": [
+        "context_only",
+        "not_robot_task"
+      ]
+    },
+    {
+      "name": "laptop_screen",
+      "shape": "box",
+      "size": [
+        0.19,
+        0.008,
+        0.12
+      ],
+      "pos": [
+        -0.59,
+        0.47,
+        0.15
+      ],
+      "kind": "static",
+      "material": "device_slate",
+      "euler": [
+        -12,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "laptop_screen_display",
+      "shape": "box",
+      "size": [
+        0.175,
+        0.001,
+        0.1
+      ],
+      "pos": [
+        -0.59,
+        0.455,
+        0.15
+      ],
+      "kind": "static",
+      "material": "display_soft",
+      "euler": [
+        -12,
+        0,
+        0
+      ],
+      "collision": false
+    },
+    {
+      "name": "stationary_sip_vessel_proxy",
+      "shape": "cylinder",
+      "size": [
+        0.033,
+        0.055
+      ],
+      "pos": [
+        -0.67,
+        -0.33,
+        0.055
+      ],
+      "kind": "static",
+      "material": "cup_cream",
+      "tags": [
+        "static_vessel_proxy",
+        "no_liquid",
+        "not_grasped"
+      ]
+    },
+    {
+      "name": "coaster",
+      "shape": "cylinder",
+      "size": [
+        0.048,
+        0.002
+      ],
+      "pos": [
+        -0.67,
+        -0.33,
+        0.002
+      ],
+      "kind": "static",
+      "material": "desk_sage"
+    },
+    {
+      "name": "closed_notebook",
+      "shape": "box",
+      "size": [
+        0.1,
+        0.075,
+        0.012
+      ],
+      "pos": [
+        0.62,
+        0.38,
+        0.012
+      ],
+      "kind": "static",
+      "material": "desk_sage",
+      "tags": [
+        "context_only",
+        "not_moved"
+      ]
+    },
+    {
+      "name": "pen",
+      "shape": "capsule",
+      "size": [
+        0.004,
+        0.07
+      ],
+      "pos": [
+        0.6,
+        0.27,
+        0.005
+      ],
+      "kind": "static",
+      "material": "device_slate",
+      "euler": [
+        0,
+        90,
+        0
+      ]
+    },
+    {
+      "name": "tidy_tray_floor",
+      "shape": "box",
+      "size": [
+        0.115,
+        0.085,
+        0.004
+      ],
+      "pos": [
+        0.65,
+        -0.35,
+        0.004
+      ],
+      "kind": "static",
+      "material": "cup_cream",
+      "tags": [
+        "future_placement_target",
+        "not_scored"
+      ]
+    },
+    {
+      "name": "tidy_tray_left",
+      "shape": "box",
+      "size": [
+        0.004,
+        0.085,
+        0.018
+      ],
+      "pos": [
+        0.531,
+        -0.35,
+        0.022
+      ],
+      "kind": "static",
+      "material": "cup_cream"
+    },
+    {
+      "name": "tidy_tray_right",
+      "shape": "box",
+      "size": [
+        0.004,
+        0.085,
+        0.018
+      ],
+      "pos": [
+        0.769,
+        -0.35,
+        0.022
+      ],
+      "kind": "static",
+      "material": "cup_cream"
+    },
+    {
+      "name": "tidy_tray_back",
+      "shape": "box",
+      "size": [
+        0.115,
+        0.004,
+        0.018
+      ],
+      "pos": [
+        0.65,
+        -0.261,
+        0.022
+      ],
+      "kind": "static",
+      "material": "cup_cream"
+    },
+    {
+      "name": "chair_seat",
+      "shape": "box",
+      "size": [
+        0.22,
+        0.22,
+        0.035
+      ],
+      "pos": [
+        -0.4,
+        -1.02,
+        -0.27
+      ],
+      "kind": "static",
+      "material": "desk_sage"
+    },
+    {
+      "name": "chair_back",
+      "shape": "box",
+      "size": [
+        0.22,
+        0.035,
+        0.29
+      ],
+      "pos": [
+        -0.4,
+        -1.23,
+        -0.04
+      ],
+      "kind": "static",
+      "material": "desk_sage"
+    },
+    {
+      "name": "chair_leg_fl",
+      "shape": "box",
+      "size": [
+        0.02,
+        0.02,
+        0.22
+      ],
+      "pos": [
+        -0.58,
+        -0.86,
+        -0.52
+      ],
+      "kind": "static",
+      "material": "device_slate"
+    },
+    {
+      "name": "chair_leg_fr",
+      "shape": "box",
+      "size": [
+        0.02,
+        0.02,
+        0.22
+      ],
+      "pos": [
+        -0.22,
+        -0.86,
+        -0.52
+      ],
+      "kind": "static",
+      "material": "device_slate"
+    },
+    {
+      "name": "chair_leg_bl",
+      "shape": "box",
+      "size": [
+        0.02,
+        0.02,
+        0.22
+      ],
+      "pos": [
+        -0.58,
+        -1.18,
+        -0.52
+      ],
+      "kind": "static",
+      "material": "device_slate"
+    },
+    {
+      "name": "chair_leg_br",
+      "shape": "box",
+      "size": [
+        0.02,
+        0.02,
+        0.22
+      ],
+      "pos": [
+        -0.22,
+        -1.18,
+        -0.52
+      ],
+      "kind": "static",
+      "material": "device_slate"
+    },
+    {
+      "name": "seated_proxy_hips",
+      "shape": "ellipsoid",
+      "size": [
+        0.17,
+        0.13,
+        0.1
+      ],
+      "pos": [
+        -0.4,
+        -1.02,
+        -0.19
+      ],
+      "kind": "static",
+      "material": "person_trousers",
+      "tags": [
+        "static_human_proxy",
+        "not_human_detection"
+      ]
+    },
+    {
+      "name": "seated_proxy_torso",
+      "shape": "ellipsoid",
+      "size": [
+        0.18,
+        0.12,
+        0.25
+      ],
+      "pos": [
+        -0.4,
+        -1.03,
+        0.12
+      ],
+      "kind": "static",
+      "material": "person_shirt",
+      "tags": [
+        "static_human_proxy",
+        "not_human_detection"
+      ]
+    },
+    {
+      "name": "seated_proxy_neck",
+      "shape": "capsule",
+      "size": [
+        0.045,
+        0.045
+      ],
+      "pos": [
+        -0.4,
+        -1.03,
+        0.405
+      ],
+      "kind": "static",
+      "material": "person_skin"
+    },
+    {
+      "name": "seated_proxy_head",
+      "shape": "ellipsoid",
+      "size": [
+        0.105,
+        0.1,
+        0.135
+      ],
+      "pos": [
+        -0.4,
+        -1.03,
+        0.56
+      ],
+      "kind": "static",
+      "material": "person_skin",
+      "tags": [
+        "static_human_proxy",
+        "no_behavior"
+      ]
+    },
+    {
+      "name": "seated_proxy_hair",
+      "shape": "ellipsoid",
+      "size": [
+        0.106,
+        0.101,
+        0.065
+      ],
+      "pos": [
+        -0.4,
+        -1.035,
+        0.64
+      ],
+      "kind": "static",
+      "material": "device_slate",
+      "collision": false
+    },
+    {
+      "name": "seated_proxy_left_thigh",
+      "shape": "capsule",
+      "size": [
+        0.075
+      ],
+      "pos": [
+        0,
+        0,
+        0
+      ],
+      "kind": "static",
+      "material": "person_trousers",
+      "fromto": [
+        -0.53,
+        -1.02,
+        -0.19,
+        -0.53,
+        -0.72,
+        -0.22
+      ],
+      "tags": [
+        "static_human_proxy",
+        "not_human_detection"
+      ]
+    },
+    {
+      "name": "seated_proxy_left_shin",
+      "shape": "capsule",
+      "size": [
+        0.055
+      ],
+      "pos": [
+        0,
+        0,
+        0
+      ],
+      "kind": "static",
+      "material": "person_trousers",
+      "fromto": [
+        -0.53,
+        -0.72,
+        -0.22,
+        -0.53,
+        -0.7,
+        -0.66
+      ],
+      "tags": [
+        "static_human_proxy",
+        "not_human_detection"
+      ]
+    },
+    {
+      "name": "seated_proxy_left_shoe",
+      "shape": "ellipsoid",
+      "size": [
+        0.065,
+        0.12,
+        0.04
+      ],
+      "pos": [
+        -0.53,
+        -0.64,
+        -0.7
+      ],
+      "kind": "static",
+      "material": "device_slate"
+    },
+    {
+      "name": "seated_proxy_right_thigh",
+      "shape": "capsule",
+      "size": [
+        0.075
+      ],
+      "pos": [
+        0,
+        0,
+        0
+      ],
+      "kind": "static",
+      "material": "person_trousers",
+      "fromto": [
+        -0.27,
+        -1.02,
+        -0.19,
+        -0.27,
+        -0.72,
+        -0.22
+      ],
+      "tags": [
+        "static_human_proxy",
+        "not_human_detection"
+      ]
+    },
+    {
+      "name": "seated_proxy_right_shin",
+      "shape": "capsule",
+      "size": [
+        0.055
+      ],
+      "pos": [
+        0,
+        0,
+        0
+      ],
+      "kind": "static",
+      "material": "person_trousers",
+      "fromto": [
+        -0.27,
+        -0.72,
+        -0.22,
+        -0.27,
+        -0.7,
+        -0.66
+      ],
+      "tags": [
+        "static_human_proxy",
+        "not_human_detection"
+      ]
+    },
+    {
+      "name": "seated_proxy_right_shoe",
+      "shape": "ellipsoid",
+      "size": [
+        0.065,
+        0.12,
+        0.04
+      ],
+      "pos": [
+        -0.27,
+        -0.64,
+        -0.7
+      ],
+      "kind": "static",
+      "material": "device_slate"
+    },
+    {
+      "name": "seated_proxy_left_upper_arm",
+      "shape": "capsule",
+      "size": [
+        0.045
+      ],
+      "pos": [
+        0,
+        0,
+        0
+      ],
+      "kind": "static",
+      "material": "person_shirt",
+      "fromto": [
+        -0.59,
+        -1.02,
+        0.27,
+        -0.68,
+        -0.88,
+        0.02
+      ],
+      "tags": [
+        "static_human_proxy",
+        "not_human_detection"
+      ]
+    },
+    {
+      "name": "seated_proxy_left_forearm",
+      "shape": "capsule",
+      "size": [
+        0.035
+      ],
+      "pos": [
+        0,
+        0,
+        0
+      ],
+      "kind": "static",
+      "material": "person_skin",
+      "fromto": [
+        -0.68,
+        -0.88,
+        0.02,
+        -0.68,
+        -0.7,
+        0.035
+      ],
+      "tags": [
+        "static_human_proxy",
+        "not_human_detection"
+      ]
+    },
+    {
+      "name": "seated_proxy_left_hand",
+      "shape": "ellipsoid",
+      "size": [
+        0.045,
+        0.055,
+        0.025
+      ],
+      "pos": [
+        -0.68,
+        -0.66,
+        0.035
+      ],
+      "kind": "static",
+      "material": "person_skin",
+      "tags": [
+        "static_human_proxy",
+        "outside_tabletop"
+      ]
+    },
+    {
+      "name": "seated_proxy_right_upper_arm",
+      "shape": "capsule",
+      "size": [
+        0.045
+      ],
+      "pos": [
+        0,
+        0,
+        0
+      ],
+      "kind": "static",
+      "material": "person_shirt",
+      "fromto": [
+        -0.21,
+        -1.02,
+        0.27,
+        -0.13,
+        -0.88,
+        0.02
+      ],
+      "tags": [
+        "static_human_proxy",
+        "not_human_detection"
+      ]
+    },
+    {
+      "name": "seated_proxy_right_forearm",
+      "shape": "capsule",
+      "size": [
+        0.035
+      ],
+      "pos": [
+        0,
+        0,
+        0
+      ],
+      "kind": "static",
+      "material": "person_skin",
+      "fromto": [
+        -0.13,
+        -0.88,
+        0.02,
+        -0.13,
+        -0.7,
+        0.035
+      ],
+      "tags": [
+        "static_human_proxy",
+        "not_human_detection"
+      ]
+    },
+    {
+      "name": "seated_proxy_right_hand",
+      "shape": "ellipsoid",
+      "size": [
+        0.045,
+        0.055,
+        0.025
+      ],
+      "pos": [
+        -0.13,
+        -0.66,
+        0.035
+      ],
+      "kind": "static",
+      "material": "person_skin",
+      "tags": [
+        "static_human_proxy",
+        "outside_tabletop"
+      ]
+    }
+  ],
+  "cameras": [
+    {
+      "name": "desk_story",
+      "pos": [
+        2.1,
+        -2.8,
+        1.85
+      ],
+      "target": [
+        -0.06,
+        -0.25,
+        0.05
+      ],
+      "fovy": 43
+    },
+    {
+      "name": "desk_overhead",
+      "pos": [
+        0,
+        -0.01,
+        2.65
+      ],
+      "target": [
+        0,
+        0,
+        0
+      ],
+      "fovy": 43
+    }
+  ],
+  "viewer": {
+    "camera_pos": [
+      2.1,
+      -2.8,
+      1.85
+    ],
+    "camera_target": [
+      -0.06,
+      -0.25,
+      0.05
+    ],
+    "fovy": 43,
+    "realtime": 1.0,
+    "show_contacts": false,
+    "exposure": 0.95
+  }
+}

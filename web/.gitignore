@@ -1,0 +1,5 @@
+/vendor/
+/assets/
+/asset-build.json
+/test-results/
+/deployment-manifest.json

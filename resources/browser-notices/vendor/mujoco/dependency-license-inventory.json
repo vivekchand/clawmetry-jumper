@@ -1,0 +1,65 @@
+{
+  "mujoco_version": "3.11.0",
+  "source_build": "https://github.com/google-deepmind/mujoco/blob/3.11.0/cmake/MujocoDependencies.cmake",
+  "components": [
+    {
+      "name": "libccd",
+      "revision": "7931e764a19ef6b21b443376c699bbc9c6d4fba8",
+      "source_url": "https://raw.githubusercontent.com/danfis/libccd/7931e764a19ef6b21b443376c699bbc9c6d4fba8/BSD-LICENSE",
+      "file": "licenses/libccd-BSD.txt",
+      "sha256": "b175a981bfccf7e1e6c2f6fbda3fde0827aaa51808a983b10c8c7e6183c44a11"
+    },
+    {
+      "name": "qhull",
+      "revision": "d1c2fc0caa5f644f3a0f220290d4a868c68ed4f6",
+      "source_url": "https://raw.githubusercontent.com/qhull/qhull/d1c2fc0caa5f644f3a0f220290d4a868c68ed4f6/COPYING.txt",
+      "file": "licenses/qhull-COPYING.txt",
+      "sha256": "106d55c931fd6a84822e5345d900273d059f1c27310d02567ccb313c5d18c55d"
+    },
+    {
+      "name": "tinyxml2",
+      "revision": "e6caeae85799003f4ca74ff26ee16a789bc2af48",
+      "source_url": "https://raw.githubusercontent.com/leethomason/tinyxml2/e6caeae85799003f4ca74ff26ee16a789bc2af48/LICENSE.txt",
+      "file": "licenses/tinyxml2-LICENSE.txt",
+      "sha256": "9332252e9b9e46db8285d4a3f0bf25f139bf1dca6781b956d57f2302efca6432"
+    },
+    {
+      "name": "tinyobjloader",
+      "revision": "1421a10d6ed9742f5b2c1766d22faa6cfbc56248",
+      "source_url": "https://raw.githubusercontent.com/tinyobjloader/tinyobjloader/1421a10d6ed9742f5b2c1766d22faa6cfbc56248/LICENSE",
+      "file": "licenses/tinyobjloader-LICENSE.txt",
+      "sha256": "bd091988e6a48690919a6c38b53752ecea7d206040dd0496df6c3314a63947fa"
+    },
+    {
+      "name": "lodepng",
+      "revision": "17d08dd26cac4d63f43af217ebd70318bfb8189c",
+      "source_url": "https://raw.githubusercontent.com/lvandeve/lodepng/17d08dd26cac4d63f43af217ebd70318bfb8189c/LICENSE",
+      "file": "licenses/lodepng-LICENSE.txt",
+      "sha256": "bdafa318b8e637d600ca1b60545e894881977a16a16b74809c95e805701621e3"
+    },
+    {
+      "name": "miniz",
+      "revision": "d10b03cc73475af673df40f06e5cefd1d5f940d9",
+      "source_url": "https://raw.githubusercontent.com/richgel999/miniz/d10b03cc73475af673df40f06e5cefd1d5f940d9/LICENSE",
+      "file": "licenses/miniz-LICENSE.txt",
+      "sha256": "0115478d567121238cf6cc1c0c361926cf07a49d9e4c9e66da97fac6a01646b3"
+    },
+    {
+      "name": "MarchingCubeCpp",
+      "revision": "f03a1b3ec29b1d7d865691ca8aea4f1eb2c2873d",
+      "source_url": "https://raw.githubusercontent.com/aparis69/MarchingCubeCpp/f03a1b3ec29b1d7d865691ca8aea4f1eb2c2873d/README.md",
+      "file": "licenses/MarchingCubeCpp-PUBLIC-DOMAIN.md",
+      "sha256": "ffeb6411f3030f8fcdf8ac11d3cd957f129bfab35ef624f5566e84e4d0172285",
+      "license_selection": "Public domain, one of the two options declared in the pinned upstream README"
+    },
+    {
+      "name": "Emscripten",
+      "revision": "4.0.10",
+      "source_url": "https://raw.githubusercontent.com/emscripten-core/emscripten/4.0.10/LICENSE",
+      "file": "licenses/Emscripten-LICENSE.txt",
+      "sha256": "620a78084fc7ca97c0b5dea9abf891f3ffcadfdbf305276f099c9c4e12fc1d86",
+      "scope": "Runtime/toolchain notices from MuJoCo3.11 publish-wasm build_steps setup_emsdk"
+    }
+  ],
+  "scope": "Pinned MuJoCo3.11 core/WASM dependencies and conservative declared-source dependencies. No renderer/test/studio binary is shipped."
+}
