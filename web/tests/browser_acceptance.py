@@ -31,6 +31,7 @@ with sync_playwright() as p:
     def fresh():
         page.evaluate('jumperDemo.engine.reset()')
         return advance(500)
+    assert not page.locator('#companion-audio').is_checked()
     fresh()
     report['cases']['settle'] = page.evaluate('jumperDemo.snapshot()')
     for action in ['wave', 'bow']:
@@ -49,12 +50,54 @@ with sync_playwright() as p:
         report['cases'][action] = {'request':result,'mid':mid,'final':final,'minimum_observed_margin_m':evidence['minimum_observed_margin_m'],'modes':modes}
         print(action, report['cases'][action], flush=True)
     fresh()
-    for action in ['jump', 'cup']:
-        result = page.evaluate('(a)=>jumperDemo.request(a)', action)
-        assert not result['allowed']
-        advance(200)
-        assert page.evaluate('jumperDemo.engine.fsm.mode()') == 'locomotion'
-        report['cases'][action] = result
+    result = page.evaluate("jumperDemo.request('jump')")
+    assert not result['allowed']
+    report['cases']['jump'] = result
+    # Every object task explicitly starts a new episode. A delayed arbitrary-
+    # state cleanup is unsupported; use the actual public helper, no flag edits.
+    for action in ['cup','cleanup']:
+        fresh();advance(500)
+        prior_episode=page.evaluate('jumperDemo.engine.episode')
+        assert not page.evaluate('(a)=>jumperDemo.request(a)',action)['allowed']
+        result=page.evaluate('(a)=>jumperDemo.startTask(a)',action)
+        assert result['allowed'],result
+        episode=page.evaluate('jumperDemo.engine.episode')
+        assert episode==prior_episode+1
+        # An overlapping button must not reset an active task.
+        overlap=page.evaluate('(a)=>jumperDemo.startTask(a)',action)
+        assert not overlap['allowed']
+        assert page.evaluate('jumperDemo.engine.episode')==episode
+        for _ in range(35):
+            advance(200)
+            outcome=page.evaluate('jumperDemo.engine.skills.lastResult')
+            if outcome:break
+        assert outcome and outcome['outcome']=='completed',outcome
+        assert outcome['measurement']['target_contained'] and outcome['contact_samples']>=2
+        assert page.evaluate('jumperDemo.engine.fsm.mode()')=='locomotion'
+        assert outcome['maximum_displacement_m']>=.05
+        before=page.evaluate('jumperDemo.engine.skills.objects()')
+        advance(1000)
+        after=page.evaluate('jumperDemo.engine.skills.objects()')
+        selected='empty_cup' if action=='cup' else 'cleanup_block'
+        assert after[selected]['target_contained']
+        assert sum((x-y)**2 for x,y in zip(before[selected]['position_m'],after[selected]['position_m']))**.5<.005
+        evidence=page.evaluate('jumperDemo.evidence()')
+        assert any(e['episode']==prior_episode for e in evidence['events'])
+        assert not page.evaluate('(a)=>jumperDemo.request(a)',action)['allowed']
+        report['cases'][action]={'request':result,'outcome':outcome,'after_return':after[selected],'episode':episode}
+        (out/f'{action}-evidence.json').write_text(json.dumps(evidence,indent=2)+'\n')
+        page.screenshot(path=str(out/f'{action}.png'),full_page=True)
+    for disturbance in ['cancel','stale']:
+        request=page.evaluate("jumperDemo.startTask('cup')")
+        assert request['allowed']
+        advance(2400) # during native forward input in the slide stage
+        if disturbance=='cancel':page.locator('#cancel-task').click()
+        else:page.evaluate("jumperDemo.experiment('stale')")
+        advance(20)
+        outcome=page.evaluate('jumperDemo.engine.skills.lastResult')
+        assert outcome['outcome']==('interrupted' if disturbance=='cancel' else 'unknown')
+        assert not page.evaluate('(id)=>jumperDemo.engine.events.some(e=>e.kind==="skill_completed"&&e.request_id===id)',request['request_id'])
+        report['cases']['object_'+disturbance]=outcome
     fresh()
     request=page.evaluate("jumperDemo.request('wave')")
     advance(1200)

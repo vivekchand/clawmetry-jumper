@@ -5,7 +5,9 @@ implementation is separate from the permissions surrounding it.
 
 The demo imports `Task` and `TaskGate` from `clawmetry.physical_ai`. It declares only `supported_actions={"wave", "bow"}` for this scene. The generic built-in gate grants no supported actions by default.
 
-Current simulator skill qualification:
+The native observer runner and browser task gate have different supported action sets. The browser enables object tasks only when its exact exported plan is qualified; it does not add those commands to the built-in observer gate. See [contact task conditions](../docs/contact-desk-skills.md).
+
+Current native observer skill qualification:
 
 | Skill | Native binding | Status |
 |---|---|---|

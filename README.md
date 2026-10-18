@@ -104,8 +104,11 @@ Neither playback path claims the full upstream training/device toolchain is read
 ## Companion skills and story
 
 [Skills](skills/README.md) define purposeful tasks and qualification requirements.
-The demo qualifies wave and bow. Table travel, picking up a vessel, transporting
-water and tidying need separately validated motion/manipulation skills. The
+The native observer runner qualifies wave and bow. The optional browser model
+also has scene-specific [contact task qualification](docs/contact-desk-skills.md)
+for sliding an empty cup and guiding one rigid paper-ball proxy into a tray.
+Only plans qualified in the delivered model can run. Airborne pickup, water
+transport and general desk cleanup are not demonstrated. The
 [roadmap](docs/task-roadmap.md) records the actual upstream grasp experiments.
 No cup is welded to a claw to manufacture a success.
 

@@ -73,17 +73,35 @@ class JumperSimulator:
     """A reproducible 200 Hz native-controller / 1 kHz physics simulation.
 
     Only reset writes the starting pose. Every subsequent rendered pose comes
-    from MuJoCo integration of the bundle's PD commands. Props are decorative
-    and outside the initial robot work area; cup manipulation is not modeled.
+    from MuJoCo integration of PD commands with the original motor limits.
+    The optional desk-skills model adds free props and scripted LF targets;
+    those props move only through the same contact physics.
     """
 
     dt = 0.005
     physics_dt = 0.001
 
-    def __init__(self, upstream: Path, *, scene_xml: Path | None = None):
+    def __init__(self, upstream: Path, *, scene_xml: Path | None = None,
+                 desk_skills: bool = False, object_offsets: dict | None = None):
         self.upstream = Path(upstream).resolve()
         self.scene_xml = Path(scene_xml).resolve() if scene_xml else None
+        self.desk_skills = bool(desk_skills)
+        self.object_offsets = copy.deepcopy(object_offsets or {})
         self.provenance = verify_upstream(self.upstream)
+        if self.desk_skills:
+            # The baseline digest predates the official decomposed claw task.
+            # Include every newly consumed collision piece in this run's input
+            # inventory; verify_upstream already checks the entire tracked tree.
+            inputs = self.provenance["files_sha256"]
+            for link, count in (("LF_palm_link", 6), ("LF_finger_link", 3)):
+                for i in range(count):
+                    relative = f"tasks/jumper/five_foot/meshes/{link}_col{i}.STL"
+                    path = (self.upstream / relative).resolve()
+                    if not path.is_relative_to(self.upstream) or not path.is_file():
+                        raise ValueError("Pinned decomposed claw input is missing or outside the checkout")
+                    inputs[relative] = hashlib.sha256(path.read_bytes()).hexdigest()
+            self.provenance["inputs_digest_sha256"] = hashlib.sha256(
+                json.dumps(inputs, sort_keys=True).encode()).hexdigest()
         if self.scene_xml:
             self.provenance["scene_xml_sha256"] = hashlib.sha256(self.scene_xml.read_bytes()).hexdigest()
         self.bundle = self.upstream / "out/bundle_example/jumper"
@@ -240,7 +258,13 @@ class JumperSimulator:
     def reset(self) -> dict:
         """Start a new episode; no subsequent step resets or teleports the robot."""
         self.close()
-        self.model = mujoco.MjModel.from_xml_string(self._scene_xml())
+        xml = self._scene_xml()
+        if self.desk_skills:
+            from .manipulation import desk_model
+            xml = desk_model(xml, self.upstream, object_offsets=self.object_offsets)
+        self.compiled_xml = xml
+        self._model_xml = xml  # Retained for existing local qualification tools.
+        self.model = mujoco.MjModel.from_xml_string(xml)
         self.data = mujoco.MjData(self.model)
         self._joint_ids = np.array([self.model.joint(n).id for n in self.wire])
         self._qadr = self.model.jnt_qposadr[self._joint_ids]
@@ -249,6 +273,9 @@ class JumperSimulator:
         base_qadr = base_joint.qposadr[0]
         self.data.qpos[base_qadr:base_qadr + 3] = self.home_contract["base_init_pos"]
         self.data.qpos[base_qadr + 3:base_qadr + 7] = [1, 0, 0, 0]
+        if self.scene_xml:
+            self.data.qpos[base_qadr:base_qadr + 2] = [.02, -.02]
+            self.data.qpos[base_qadr + 3:base_qadr + 7] = [math.sqrt(.5), 0, 0, -math.sqrt(.5)]
         self.data.qpos[self._qadr] = [self.home_contract["default_joint_pos"][n] for n in self.wire]
         self._body = self.model.body("base_link").id
         self._robot_collision_ids = np.array([
@@ -256,6 +283,12 @@ class JumperSimulator:
             if self.model.body_rootid[self.model.geom_bodyid[i]] == self._body
             and (self.model.geom_contype[i] or self.model.geom_conaffinity[i])
         ], dtype=int)
+        if self.desk_skills:
+            from .manipulation import OBJECTS
+            self._desk_object_geom_ids = {
+                name: np.flatnonzero(self.model.geom_bodyid == self.model.body(name).id)
+                for name in OBJECTS
+            }
         self._torque = np.zeros(len(self.wire))
         self._heat = np.zeros(len(self.wire))
         self._tick = 0
@@ -265,7 +298,8 @@ class JumperSimulator:
         mujoco.mj_forward(self.model, self.data)
         return self.snapshot()
 
-    def step(self, keys: list[tuple[str, bool]] | None = None) -> dict:
+    def step(self, keys: list[tuple[str, bool]] | None = None, *,
+             joint_targets: dict[str, float] | None = None) -> dict:
         """Advance 5 ms with key edges delivered to the native controller."""
         if not np.isfinite(self.data.qpos).all() or not np.isfinite(self.data.qvel).all():
             raise FloatingPointError("Nonfinite physics state cannot reach the controller")
@@ -288,6 +322,23 @@ class JumperSimulator:
             self.fsm.resume(action.tolist())
         targets = np.asarray(self.fsm.positions())
         kp, kd = np.asarray(self.fsm.kp()), np.asarray(self.fsm.kd())
+        if joint_targets is not None:
+            from .manipulation import LF_JOINTS
+            if not self.desk_skills or set(joint_targets) - set(LF_JOINTS):
+                raise ValueError("Desk joint PD is limited to the simulation left claw")
+            targets = targets.copy()
+            kp, kd = kp.copy(), kd.copy()
+            for name, value in joint_targets.items():
+                if isinstance(value, bool) or not isinstance(value, (float, int)) or not math.isfinite(value):
+                    raise ValueError("Desk joint target must be finite")
+                idx = self.wire.index(name)
+                lo, hi = self.model.jnt_range[self._joint_ids[idx]]
+                if value < lo - 1e-9 or value > hi + 1e-9:
+                    raise ValueError("Desk joint target exceeds the original joint limits")
+                value = float(np.clip(value, lo, hi))
+                if name == "LF_J4_joint":
+                    value = min(value, float(self.data.qpos[self._qadr[idx]]) + .06)
+                targets[idx], kp[idx], kd[idx] = value, 10., .5
         for _ in range(5):
             q, velocity = self.data.qpos[self._qadr], self.data.qvel[self._dadr]
             raw = kp * (targets - q) - kd * velocity
@@ -328,7 +379,7 @@ class JumperSimulator:
         lower, upper = (centers - half_sizes).min(axis=0), (centers + half_sizes).max(axis=0)
         margin = min(lower[0] + .86, .86 - upper[0], lower[1] + .58, .58 - upper[1])
         body_velocity = self.data.sensor("imu_lin_vel").data
-        return {
+        snapshot = {
             "time_s": float(self.data.time), "mode": self.fsm.mode,
             "running_policy": bool(self.fsm.running_policy),
             "position_m": self.data.xpos[self._body].tolist(), "quat_wxyz": quat.tolist(),
@@ -345,6 +396,55 @@ class JumperSimulator:
             "max_motor_heat_ratio": float(self._heat.max()),
             "evidence_kind": "simulation", "torque_source": "simulator_applied_pd_torque",
         }
+        if self.desk_skills:
+            from .manipulation import OBJECTS, object_bounds
+            snapshot["objects"] = {
+                name: {"position_m": self.data.xpos[self.model.body(name).id].tolist(),
+                       "bounds_m": object_bounds(self.model, self.data, self._desk_object_geom_ids[name]),
+                       "quaternion_wxyz": self.data.xquat[self.model.body(name).id].tolist(),
+                       "linear_velocity_m_s": self.data.qvel[self.model.joint(name + "_free").dofadr[0]:
+                                                            self.model.joint(name + "_free").dofadr[0] + 3].tolist(),
+                       "angular_velocity_rad_s": (self.data.xmat[self.model.body(name).id].reshape(3, 3) @
+                           self.data.qvel[self.model.joint(name + "_free").dofadr[0] + 3:
+                                          self.model.joint(name + "_free").dofadr[0] + 6]).tolist(),
+                       "tilt_deg": math.degrees(math.acos(float(np.clip(self.data.xmat[self.model.body(name).id][8], -1, 1))))}
+                for name in OBJECTS
+            }
+        return snapshot
+
+    def manipulation_config(self) -> dict | None:
+        """Export exact model addresses and candidate plans for the browser host."""
+        if not self.desk_skills:
+            return None
+        from .manipulation import LF_JOINTS, OBJECTS
+        from .contact_plans import CANDIDATE_PLANS
+        objects = {}
+        for name, spec in OBJECTS.items():
+            body = self.model.body(name).id
+            joint = self.model.joint(name + "_free")
+            objects[name] = {
+                "body_id": body, "joint_id": joint.id,
+                "qpos_adr": int(joint.qposadr[0]), "dof_adr": int(joint.dofadr[0]),
+                "geom_ids": np.flatnonzero(self.model.geom_bodyid == body).tolist(),
+                "start_position_m": self.data.xpos[body].tolist(),
+                "target_xy": spec["target"], "mass_kg": spec["mass_kg"],
+                "radius_m": spec["radius"], "height_m": spec["height"],
+                "shape": spec.get("shape", "hollow_cup"),
+                "target_shape": spec["target_shape"],
+            }
+            for key in ("target_radius_m", "target_half_size_m", "target_center_xy", "target_bounds_m"):
+                if key in spec: objects[name][key] = copy.deepcopy(spec[key])
+        jaws = [i for i in range(self.model.ngeom) if
+                self.model.geom(i).name.startswith(("LF_palm_link_meshcol", "LF_finger_link_meshcol",
+                                                   "LF_finger_tip_link_meshcol", "LF_palm_pad_f_link_meshcol",
+                                                   "LF_palm_pad_b_link_meshcol"))]
+        return {"schema": "mizu_contact_skills/1", "controller_kind": "scripted_joint_pd_with_native_five_foot_support",
+                "joint_names": list(LF_JOINTS),
+                "wire_indices": [self.wire.index(name) for name in LF_JOINTS],
+                "kp": 10., "kd": .5, "squeeze_lead_rad": .06,
+                "claw_key": "key_v", "claw_settle_s": 3.,
+                "jaw_geom_ids": jaws, "robot_geom_ids": self._robot_collision_ids.tolist(),
+                "objects": objects, "plans": copy.deepcopy(CANDIDATE_PLANS)}
 
     def render(self, width: int = 1280, height: int = 720) -> np.ndarray:
         """Return an RGB frame with a fixed camera, without advancing physics."""

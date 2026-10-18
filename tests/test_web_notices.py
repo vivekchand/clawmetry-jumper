@@ -2,6 +2,7 @@
 import hashlib
 import importlib.util
 import json
+import os
 from pathlib import Path
 import shutil
 
@@ -40,7 +41,7 @@ def test_versioned_notice_inputs_are_complete_and_hash_pinned(tmp_path):
 
 def test_notice_copy_binds_to_supplied_controller_and_source_lock(tmp_path):
     module = preparer()
-    upstream = ROOT.parent / "clawmetry-jumper-upstream"
+    upstream = Path(os.environ.get("JUMPER_UPSTREAM", str(ROOT.parent / "clawmetry-jumper-upstream")))
     # The upstream directory is fetched at the exact public pin by the CI job.
     controller = upstream / "out/bundle_example/jumper/runtime/web/controller.wasm"
     web = tmp_path / "web"

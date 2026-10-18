@@ -1,3 +1,4 @@
+import {DeskSkills} from './manipulation.js';
 import loadMujoco from './vendor/mujoco/mujoco.js';
 import * as ort from './vendor/ort/ort.wasm.min.mjs';
 import initController, {WebFsm} from './assets/bundle/runtime/web/controller.js';
@@ -125,6 +126,7 @@ export class Simulation {
 
   reset() {
     this.assertAlive();
+    this.skills?.abort('The scene reset before placement was verified.');
     if(this.activeRequest)this.emit('action_interrupted','The scene was reset before the requested gesture had a measured return.',{request_id:this.activeRequest.request_id,outcome:'interrupted'});
     this.episode++;
     this.fsm?.free(); this.fsm = this.newController();
@@ -134,23 +136,33 @@ export class Simulation {
     this.mj.mj_forward(this.model,this.data);
     this.torque = new Float64Array(this.config.wire.length);
     this.heat = new Float64Array(this.config.wire.length); this.tick=0;
-    this.pending=[]; this.force=null; this.observationUntil=0; this.alertFlags.clear();this.activeRequest=null;
+    this.pending=[]; this.force=null; this.observationUntil=0; this.alertFlags.clear();this.activeRequest=null;this.hasAcceptedRequest=false;
+    this.skills=this.config.manipulation?new DeskSkills(this,this.config.manipulation):null;
     this.minMargin=Infinity; this.lastObserved=this.snapshot(); this.lastObservedAt=0;
     this.emit('scene_reset','Fresh scene started at the documented controller home pose.');
   }
 
   request(action) {
     const requestId = crypto.randomUUID();
-    if (!['wave','bow','jump','cup'].includes(action)) throw new Error('Unknown task request');
-    this.emit('action_requested', `Requested: ${action}.`, {request_id:requestId, action, task:'desk_reminder'});
+    if (!['wave','bow','jump','cup','cleanup'].includes(action)) throw new Error('Unknown task request');
+    const manipulation=['cup','cleanup'].includes(action);
+    this.emit('action_requested', `Requested: ${action}.`, {request_id:requestId, action, task:manipulation?(action==='cup'?'empty_cup_to_coaster':'desk_item_to_tray'):'desk_reminder'});
     let reason = '';
     if (this.data.time < this.observationUntil) reason='Observation unavailable. New actions need fresh evidence.';
     else if (action === 'jump') reason='A jump is outside this reminder task.';
-    else if (action === 'cup') reason='Cup transport is not an implemented or authorized skill.';
-    else if (this.pending.length || this.fsm.mode() !== 'locomotion') reason='Wait for the current motion to return before requesting another.';
-    else if (this.snapshot().margin_m < .12 || this.snapshot().tilt_deg > 35) reason='The current measured pose needs a fresh scene before a greeting.';
+    else if(this.skills?.active||this.activeRequest) reason='Let me finish this little task first, or end it.';
+    else if(manipulation&&this.data.time>3)reason='Use Start cup task or Start cleanup task for a fresh scene.';
+    else if(manipulation&&this.hasAcceptedRequest)reason='Start a fresh scene for this fixed-scene object task.';
+    else if(manipulation) reason=this.skills?.reason(action)??'This scene has no qualified object task.';
+    if(!reason && (this.pending.length || (manipulation?!['locomotion','claw_left'].includes(this.fsm.mode()):this.fsm.mode() !== 'locomotion'))) reason='Wait for the current motion to return before requesting another.';
+    if(!reason && (this.snapshot().margin_m < .12 || this.snapshot().tilt_deg > 35)) reason='The current measured pose needs a fresh scene before a greeting.';
     if (reason) {
       this.emit('action_denied',reason,{request_id:requestId,action,forwarded:false}); return {allowed:false,reason,request_id:requestId};
+    }
+    this.hasAcceptedRequest=true;
+    if(manipulation){
+      this.emit('action_allowed',action==='cup'?'Empty cup to the coaster allowed.':'Named desk item to the tray allowed.',{request_id:requestId,action});
+      this.skills.start(action,requestId);return {allowed:true,request_id:requestId};
     }
     const code = action === 'wave' ? 'Digit1' : 'Digit2';
     this.pending.push({code,down:true,at:this.data.time,requestId,action},
@@ -160,7 +172,11 @@ export class Simulation {
     return {allowed:true,request_id:requestId};
   }
 
+  queueKey(code,requestId,action){this.pending.push({code,down:true,at:this.data.time,requestId,action},{code,down:false,at:this.data.time+.04,requestId,action});}
+
   experiment(kind) {
+    if(!['stale','lift','drift'].includes(kind))throw new Error('Unknown experiment');
+    this.skills?.abort(kind==='stale'?'Observations were interrupted. Placement is unknown.':'A disturbance interrupted the task before placement was verified.',kind==='stale'?'unknown':'interrupted');
     if (kind === 'stale') {
       this.observationUntil = this.data.time+3;
       this.emit('observation_interrupted','The ClawMetry observation feed is paused for three simulated seconds. Native physics and controller continue.',{duration_s:3}); return;
@@ -189,6 +205,14 @@ export class Simulation {
     const previous=this.fsm.mode(), mode=this.fsm.tick(now);
     if(mode!==undefined) {const action=await this.infer(mode,this.fsm.observation());this.assertAlive();this.fsm.resume(action);this.inferences++;}
     const target=this.fsm.positions(), kp=this.fsm.kp(), kd=this.fsm.kd(), s=c.servo;
+    const skillTargets=this.skills?.targets();
+    if(skillTargets){
+      for(let k=0;k<skillTargets.length;k++){
+        const i=c.manipulation.wire_indices[k],limits=this.contracts.locomotion.joint_limits[c.wire[i]],value=skillTargets[k];
+        if(!Number.isFinite(value)||value<limits[0]-1e-6||value>limits[1]+1e-6)throw new Error('The task target exceeds the original joint limits. Start a fresh scene.');
+        target[i]=k===4?Math.min(value,q[c.qadr[i]]+.06):value;kp[i]=10;kd[i]=.5;
+      }
+    }
     const thermal=s.peak_duration_s / Math.log(1/(1-(s.thermal_continuous_torque_nm/s.plateau_torque_nm)**2));
     for(let sub=0;sub<5;sub++) {
       this.data.qfrc_applied.fill(0);this.data.xfrc_applied.fill(0);
@@ -210,7 +234,7 @@ export class Simulation {
       this.data.xfrc_applied.fill(0);this.emit('external_force_removed','The scripted force is removed. Subsequent movement is the measured physics outcome.',{experiment:this.force.kind});this.force=null;
     }
     const current=this.fsm.mode();
-    if(current!==previous)this.emit('controller_mode',`Controller entered ${current.replaceAll('_',' ')}.`,{from:previous,to:current,request_id:this.activeRequest?.request_id??null});
+    if(current!==previous)this.emit('controller_mode',`Controller entered ${current.replaceAll('_',' ')}.`,{from:previous,to:current,request_id:this.activeRequest?.request_id??this.skills?.active?.request_id??null});
     const snap=this.snapshot();
     if(this.activeRequest){
       const a=this.activeRequest;
@@ -261,7 +285,7 @@ export class Simulation {
     const margin=Math.min(lo[0]+.86,.86-hi[0],lo[1]+.58,.58-hi[1]);
     return {position_m:Array.from(pos),tilt_deg:Math.acos(Math.max(-1,Math.min(1,rot[8])))*180/Math.PI,
       margin_m:margin,breached:margin<0,collision_aabb_m:{min:lo,max:hi},
-      mode:this.fsm?.mode()??'initializing',finite:finite(this.data.qpos)&&finite(this.data.qvel)};
+      mode:this.fsm?.mode()??'initializing',...(this.skills?{objects:this.skills.objects()}:{}),finite:finite(this.data.qpos)&&finite(this.data.qvel)};
   }
 
   evidence() {

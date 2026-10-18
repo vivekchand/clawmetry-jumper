@@ -1,0 +1,256 @@
+{
+  "schema": "mizu_fixed_scene_qualification/1",
+  "simulation_only": true,
+  "scope": "Explicit fresh-scene scripted contact tasks. No general manipulation or hardware qualification.",
+  "upstream_commit": "78966f45de6f2b6de3f7cea017f32a39f8b993e6",
+  "browser_model_sha256": "9430e34190c1ff8061b3e80f6164ec78c20d35d8f65ba956993f7e1be12d1184",
+  "actions": [
+    "cup",
+    "cleanup"
+  ],
+  "source_sha256": {
+    "src/clawmetry_jumper/simulator.py": "91fa7fb424d139b85876957dac982e5539340da8343383d2930a3e758c04ef16",
+    "src/clawmetry_jumper/manipulation.py": "0a99d83595450b29bda02b45d61362d868b532f53d823736f92d86ec378dadbf",
+    "src/clawmetry_jumper/contact_plans.py": "3b94390a2f14354299031b94e5ba0c0dbe42e83080e5dc3efdd20312104d7dea",
+    "scenes/mizu-desk.scene.json": "f7b1ed014005f2998ec01670a14f7d796569613b413f35878af9c359f1e92167",
+    "web/simulation.js": "0f26bee727ebb9c7abc091949d15472d88a724294a59dc30f6e588bcee544ba5",
+    "web/manipulation.js": "6c03a4355d783b20ea57fefcea13aac98a1b44f9fd6ab0600c1773fe0ed5e6a4",
+    "web/app.js": "43810ef84d3f4ad08263321c45d24618edd3378b543d49a95111074edb29369f",
+    "scripts/prepare_web_assets.py": "c8323986163a8bfa2f0d45c935ef2fd16e44df909630549117fbef7808577cf4"
+  },
+  "measured_results": {
+    "cup": {
+      "native": {
+        "passed": true,
+        "full_report_sha256": "a36f29c605d999d15fa813d77a1a830d6d2677143c307e9371f05e71bf9e8d73",
+        "final": {
+          "time_s": 19.250000000000544,
+          "stage": "native_return",
+          "mode": "locomotion",
+          "position_m": [
+            0.05165043199318668,
+            -0.3159382260083204,
+            0.04991214165803564
+          ],
+          "bounds_m": {
+            "min": [
+              0.020430506645552616,
+              -0.3471585644596735,
+              -8.841257850818619e-05
+            ],
+            "max": [
+              0.08287203315561122,
+              -0.28471707386921363,
+              0.09891264523347927
+            ]
+          },
+          "tilt_deg": 0.001111844084002621,
+          "robot_tilt_deg": 0.43768153473150134,
+          "table_margin_m": 0.27449777030984107,
+          "jaw_contacts": 0,
+          "robot_contacts": 0,
+          "target_error_m": 0.01024586814410049,
+          "displacement_m": 0.06096057180510423,
+          "hand_approach_m": 0.05412870534792047,
+          "velocity_m_s": [
+            7.61003749165373e-05,
+            1.6886252169337668e-05,
+            -1.3442759389855029e-06
+          ],
+          "checks": {
+            "target": true,
+            "footprint": true,
+            "moved": true,
+            "hand": true,
+            "upright": true,
+            "low_speed": true,
+            "low_spin": true,
+            "resting": true,
+            "released": true,
+            "contacted": true,
+            "other_unchanged": true,
+            "robot_stable": true,
+            "inside_table": true,
+            "object_inside": true,
+            "native_locomotion": true
+          },
+          "stable_s": 0.7500000000000006
+        },
+        "max_robot_tilt_deg": 9.016970085193845,
+        "minimum_table_margin_m": 0.25327013020145417,
+        "maximum_other_displacement_m": 0.002038044786376217,
+        "contact_samples": 254,
+        "source_sha256_at_execution": {
+          "src/clawmetry_jumper/simulator.py": "91fa7fb424d139b85876957dac982e5539340da8343383d2930a3e758c04ef16",
+          "src/clawmetry_jumper/manipulation.py": "0a99d83595450b29bda02b45d61362d868b532f53d823736f92d86ec378dadbf",
+          "src/clawmetry_jumper/contact_plans.py": "3b94390a2f14354299031b94e5ba0c0dbe42e83080e5dc3efdd20312104d7dea",
+          "scripts/qualify_desk_skills.py": "8b62ae563d441d5818f10ee67bcbe228a115dc4adb8072e2cba9cada8fff0f43",
+          "scripts/plan_desk_skills.py": "cd851121a9419e892742ce2f2ef8588de53ea4448823e8cccf286f5b45a90ba0"
+        }
+      },
+      "browser": {
+        "passed": true,
+        "full_report_sha256": "a066a744b8b3c751d85be0734428f9879fae76a2a52ce54d79b5c88ee9d03522",
+        "model_sha256": "9430e34190c1ff8061b3e80f6164ec78c20d35d8f65ba956993f7e1be12d1184",
+        "measured_outcome": {
+          "sequence": 17,
+          "episode": 3,
+          "sim_time_s": 19.275000000000574,
+          "kind": "skill_completed",
+          "message": "Your empty cup is on the coaster and released.",
+          "action": "cup",
+          "outcome": "completed",
+          "measurement": {
+            "position_m": [
+              0.054194154246009485,
+              -0.3164692667591425,
+              0.04991215982568414
+            ],
+            "bounds_m": {
+              "min": [
+                0.02221572815934318,
+                -0.3484479931869298,
+                -8.83189855058657e-05
+              ],
+              "max": [
+                0.0861739831258537,
+                -0.28448976433581047,
+                0.0989125932512174
+              ]
+            },
+            "target_contained": true,
+            "tilt_deg": 0.0009567873705685379,
+            "linear_speed_m_s": 2.026612889397551e-05,
+            "angular_speed_rad_s": 0.00040576887964107865,
+            "finite": true
+          },
+          "contact_samples": 23,
+          "contact_count": 26,
+          "maximum_displacement_m": 0.061626525716574294,
+          "minimum_margin_m": 0.25209826749427205,
+          "maximum_robot_tilt_deg": 9.289417452540539,
+          "controller_kind": "scripted_joint_pd_with_native_five_foot_support"
+        }
+      }
+    },
+    "cleanup": {
+      "native": {
+        "passed": true,
+        "full_report_sha256": "1631cea07acfae6f1e064eb942556c91286621d7bd53c0eee22036e0cbafd6fc",
+        "final": {
+          "time_s": 27.25000000001032,
+          "stage": "native_return",
+          "mode": "locomotion",
+          "position_m": [
+            0.21625645405809074,
+            -0.206755065579384,
+            0.024792765221131705
+          ],
+          "bounds_m": {
+            "min": [
+              0.19125645405809075,
+              -0.231755065579384,
+              -0.00020723477886829683
+            ],
+            "max": [
+              0.24125645405809074,
+              -0.181755065579384,
+              0.049792765221131706
+            ]
+          },
+          "tilt_deg": 136.483510860724,
+          "robot_tilt_deg": 2.0069463818740867,
+          "table_margin_m": 0.3866219822238539,
+          "jaw_contacts": 0,
+          "robot_contacts": 0,
+          "target_error_m": 0.0369452159550327,
+          "displacement_m": 0.05643274593628972,
+          "hand_approach_m": 0.008868678395321294,
+          "velocity_m_s": [
+            -9.657393940259071e-12,
+            1.7199834122121925e-11,
+            6.862881689744296e-16
+          ],
+          "checks": {
+            "target": true,
+            "footprint": true,
+            "moved": true,
+            "hand": true,
+            "upright": true,
+            "low_speed": true,
+            "low_spin": true,
+            "resting": true,
+            "released": true,
+            "contacted": true,
+            "other_unchanged": true,
+            "robot_stable": true,
+            "inside_table": true,
+            "object_inside": true,
+            "native_locomotion": true
+          },
+          "stable_s": 0.7500000000000006
+        },
+        "max_robot_tilt_deg": 2.6874636683386117,
+        "minimum_table_margin_m": 0.26944987294345313,
+        "maximum_other_displacement_m": 0.012787730971449546,
+        "contact_samples": 1442,
+        "source_sha256_at_execution": {
+          "src/clawmetry_jumper/simulator.py": "91fa7fb424d139b85876957dac982e5539340da8343383d2930a3e758c04ef16",
+          "src/clawmetry_jumper/manipulation.py": "0a99d83595450b29bda02b45d61362d868b532f53d823736f92d86ec378dadbf",
+          "src/clawmetry_jumper/contact_plans.py": "3b94390a2f14354299031b94e5ba0c0dbe42e83080e5dc3efdd20312104d7dea",
+          "scripts/qualify_desk_skills.py": "8b62ae563d441d5818f10ee67bcbe228a115dc4adb8072e2cba9cada8fff0f43",
+          "scripts/plan_desk_skills.py": "cd851121a9419e892742ce2f2ef8588de53ea4448823e8cccf286f5b45a90ba0"
+        }
+      },
+      "browser": {
+        "passed": true,
+        "full_report_sha256": "a26cecf8f124290b6c11191a4b4ea48cd080da42971bf27f95293e04652d0d9b",
+        "model_sha256": "9430e34190c1ff8061b3e80f6164ec78c20d35d8f65ba956993f7e1be12d1184",
+        "measured_outcome": {
+          "sequence": 20,
+          "episode": 3,
+          "sim_time_s": 27.27500000001035,
+          "kind": "skill_completed",
+          "message": "The desk item is in its tray and released.",
+          "action": "cleanup",
+          "outcome": "completed",
+          "measurement": {
+            "position_m": [
+              0.21688212581502578,
+              -0.2066752855880776,
+              0.024792765221131705
+            ],
+            "bounds_m": {
+              "min": [
+                0.19188212581502578,
+                -0.2316752855880776,
+                -0.00020723477886829683
+              ],
+              "max": [
+                0.24188212581502577,
+                -0.1816752855880776,
+                0.049792765221131706
+              ]
+            },
+            "target_contained": true,
+            "tilt_deg": 136.96982700377,
+            "linear_speed_m_s": 1.119787297486318e-12,
+            "angular_speed_rad_s": 1.1152966154432264e-10,
+            "finite": true
+          },
+          "contact_samples": 147,
+          "contact_count": 470,
+          "maximum_displacement_m": 0.05776086950797295,
+          "minimum_margin_m": 0.26927983952094414,
+          "maximum_robot_tilt_deg": 2.6874639077509146,
+          "controller_kind": "scripted_joint_pd_with_native_five_foot_support"
+        }
+      }
+    }
+  },
+  "known_limits": [
+    "Cleanup failed a 1 mm X reset perturbation and a five-second delayed arbitrary-state request.",
+    "The UI explicitly starts a new scene before object tasks. No reset occurs during a task.",
+    "No airborne pickup, liquid, flexible-paper, human recognition, real phone push or hardware behavior is established."
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "name": "mizu-desk",
   "title": "Mizu Desk Companion",
-  "description": "Finite tabletop for a local Jumper simulation, with a static seated human proxy, laptop and stationary sip and tidy props. Proxy geometry is not human detection or a biomechanical model. No manipulation, liquid, containment guarantee or hardware behavior is supplied by this map.",
+  "description": "Finite tabletop for a local Jumper simulation: seated static human context, reachable laptop facing the person, an empty-cup delivery marker and small cleanup tray. The map supplies no dynamic task object, manipulation skill, liquid, handoff, containment guarantee or hardware behavior; the simulation host owns any measured task execution.",
   "tags": [
     "authored",
     "desk_companion",
@@ -10,11 +10,11 @@
   ],
   "spawn": {
     "position": [
-      0,
-      0,
+      0.02,
+      -0.02,
       0
     ],
-    "yaw": 0,
+    "yaw": -90,
     "clearance": 0.5,
     "bounds": [
       -0.86,
@@ -52,9 +52,9 @@
     {
       "name": "desk_sand",
       "rgba": [
-        0.73,
-        0.62,
-        0.45,
+        0.713725,
+        0.666667,
+        0.54902,
         1
       ],
       "reflectance": 0,
@@ -65,9 +65,9 @@
     {
       "name": "desk_sage",
       "rgba": [
-        0.47,
-        0.6,
-        0.47,
+        0.643137,
+        0.745098,
+        0.694118,
         1
       ],
       "reflectance": 0,
@@ -78,9 +78,9 @@
     {
       "name": "desk_moss",
       "rgba": [
-        0.24,
-        0.33,
-        0.29,
+        0.137255,
+        0.305882,
+        0.262745,
         1
       ],
       "reflectance": 0,
@@ -91,9 +91,9 @@
     {
       "name": "device_slate",
       "rgba": [
-        0.16,
-        0.2,
-        0.23,
+        0.133333,
+        0.239216,
+        0.203922,
         1
       ],
       "reflectance": 0,
@@ -117,9 +117,9 @@
     {
       "name": "cup_cream",
       "rgba": [
-        0.92,
-        0.87,
-        0.75,
+        0.964706,
+        0.960784,
+        0.921569,
         1
       ],
       "reflectance": 0,
@@ -286,14 +286,15 @@
         0.009
       ],
       "pos": [
-        -0.59,
-        0.38,
+        -0.4,
+        -0.435,
         0.009
       ],
       "kind": "static",
       "material": "device_slate",
       "tags": [
         "context_only",
+        "within_seated_hand_reach",
         "not_robot_task"
       ]
     },
@@ -306,9 +307,9 @@
         0.12
       ],
       "pos": [
-        -0.59,
-        0.47,
-        0.15
+        -0.4,
+        -0.335,
+        0.141
       ],
       "kind": "static",
       "material": "device_slate",
@@ -327,9 +328,9 @@
         0.1
       ],
       "pos": [
-        -0.59,
-        0.455,
-        0.15
+        -0.4,
+        -0.35,
+        0.141
       ],
       "kind": "static",
       "material": "display_soft",
@@ -341,39 +342,25 @@
       "collision": false
     },
     {
-      "name": "stationary_sip_vessel_proxy",
-      "shape": "cylinder",
-      "size": [
-        0.033,
-        0.055
-      ],
-      "pos": [
-        -0.67,
-        -0.33,
-        0.055
-      ],
-      "kind": "static",
-      "material": "cup_cream",
-      "tags": [
-        "static_vessel_proxy",
-        "no_liquid",
-        "not_grasped"
-      ]
-    },
-    {
       "name": "coaster",
       "shape": "cylinder",
       "size": [
         0.048,
-        0.002
+        0.001
       ],
       "pos": [
-        -0.67,
-        -0.33,
-        0.002
+        0.06,
+        -0.31,
+        0.001
       ],
       "kind": "static",
-      "material": "desk_sage"
+      "material": "desk_sage",
+      "collision": false,
+      "tags": [
+        "empty_cup_delivery_marker",
+        "visual_only",
+        "not_task_success"
+      ]
     },
     {
       "name": "closed_notebook",
@@ -419,20 +406,21 @@
       "name": "tidy_tray_floor",
       "shape": "box",
       "size": [
-        0.115,
-        0.085,
+        0.09,
+        0.0625,
         0.004
       ],
       "pos": [
-        0.65,
-        -0.35,
-        0.004
+        0.22,
+        -0.1725,
+        -0.004
       ],
       "kind": "static",
       "material": "cup_cream",
       "tags": [
-        "future_placement_target",
-        "not_scored"
+        "cleanup_placement_target",
+        "host_scores_actual_object_pose",
+        "not_task_success"
       ]
     },
     {
@@ -440,13 +428,13 @@
       "shape": "box",
       "size": [
         0.004,
-        0.085,
+        0.0625,
         0.018
       ],
       "pos": [
-        0.531,
-        -0.35,
-        0.022
+        0.126,
+        -0.1725,
+        0.018
       ],
       "kind": "static",
       "material": "cup_cream"
@@ -456,13 +444,13 @@
       "shape": "box",
       "size": [
         0.004,
-        0.085,
+        0.0625,
         0.018
       ],
       "pos": [
-        0.769,
-        -0.35,
-        0.022
+        0.314,
+        -0.1725,
+        0.018
       ],
       "kind": "static",
       "material": "cup_cream"
@@ -471,14 +459,14 @@
       "name": "tidy_tray_back",
       "shape": "box",
       "size": [
-        0.115,
+        0.09,
         0.004,
         0.018
       ],
       "pos": [
-        0.65,
-        -0.261,
-        0.022
+        0.22,
+        -0.106,
+        0.018
       ],
       "kind": "static",
       "material": "cup_cream"
